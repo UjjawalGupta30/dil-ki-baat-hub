@@ -39,12 +39,27 @@ export function Hero() {
         ease: EASE,
       });
 
-      // dissolve into depth on scroll
-      gsap.to("[data-hero-stage]", {
-        z: -700,
-        scale: 0.82,
+      // ACT 1 — the letters scale up through Z and fly past the camera
+      gsap.to(split.chars, {
+        z: 900,
+        scale: 1.6,
         autoAlpha: 0,
-        filter: "blur(14px)",
+        filter: "blur(16px)",
+        ease: "none",
+        stagger: { each: 0.012, from: "center" },
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+      });
+
+      // everything else recedes quietly into depth
+      gsap.to("[data-hero-fade]", {
+        z: -600,
+        autoAlpha: 0,
+        filter: "blur(10px)",
         ease: "none",
         scrollTrigger: {
           trigger: root.current,
@@ -53,6 +68,7 @@ export function Hero() {
           scrub: 0.8,
         },
       });
+
 
       return () => split.revert();
     },
