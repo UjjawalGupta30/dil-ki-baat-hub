@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Dil Ki Baat. Sabke Saath. A safe, anonymous space to share what's heavy on your heart.",
+          "A safe, anonymous space to put down what you carry — and be read without judgement.",
       },
       { name: "author", content: "aapkamentor.ai" },
       { property: "og:title", content: "Dil Ki Baat — Anonymous Stories, Real Advice" },

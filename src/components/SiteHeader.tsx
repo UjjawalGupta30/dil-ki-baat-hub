@@ -14,7 +14,7 @@ export function SiteHeader() {
             DilKiBaat
           </span>
           <span className="block truncate text-[0.6rem] uppercase tracking-[0.28em] text-muted-foreground">
-            Dil Ki Baat. Sabke Saath.
+            Anonymous. Unhurried. Heard.
           </span>
         </span>
       </Link>
