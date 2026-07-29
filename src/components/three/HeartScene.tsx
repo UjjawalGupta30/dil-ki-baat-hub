@@ -148,6 +148,60 @@ function Rings() {
         <torusGeometry args={[3.15, 0.003, 8, 160]} />
         <meshBasicMaterial color={ROSE} transparent opacity={0.2} />
       </mesh>
+      <mesh rotation={[1.3, -0.4, 0.6]}>
+        <torusGeometry args={[3.7, 0.0025, 8, 180]} />
+        <meshBasicMaterial color={EMBER} transparent opacity={0.14} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Slow-drifting glass shards — like fragments of unsaid thoughts orbiting the heart. */
+function Shards({ count = 9 }: { count?: number }) {
+  const g = useRef<THREE.Group>(null);
+  const items = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => {
+        const a = (i / count) * Math.PI * 2;
+        const r = 2.6 + Math.random() * 1.6;
+        return {
+          pos: [Math.cos(a) * r, (Math.random() - 0.5) * 3.2, Math.sin(a) * r - 0.6] as const,
+          rot: [Math.random() * 3, Math.random() * 3, Math.random() * 3] as const,
+          size: 0.16 + Math.random() * 0.24,
+          speed: 0.12 + Math.random() * 0.22,
+          seed: Math.random() * Math.PI * 2,
+          color: [GOLD, ROSE, EMBER][i % 3],
+        };
+      }),
+    [count],
+  );
+
+  useFrame(({ clock }) => {
+    if (!g.current) return;
+    const t = clock.getElapsedTime();
+    g.current.rotation.y = t * 0.045;
+    g.current.children.forEach((child, i) => {
+      const it = items[i];
+      child.position.y = it.pos[1] + Math.sin(t * it.speed + it.seed) * 0.4;
+      child.rotation.x += 0.0022;
+      child.rotation.z += 0.0016;
+    });
+  });
+
+  return (
+    <group ref={g}>
+      {items.map((it, i) => (
+        <group key={i} position={it.pos as unknown as [number, number, number]} rotation={it.rot as unknown as [number, number, number]}>
+          <mesh>
+            <octahedronGeometry args={[it.size, 0]} />
+            <meshBasicMaterial color={it.color} transparent opacity={0.12} />
+          </mesh>
+          <lineSegments>
+            <wireframeGeometry args={[new THREE.OctahedronGeometry(it.size, 0)]} />
+            <lineBasicMaterial color={it.color} transparent opacity={0.4} />
+          </lineSegments>
+        </group>
+      ))}
     </group>
   );
 }
@@ -162,7 +216,9 @@ export default function HeartScene() {
       <ambientLight intensity={0.6} />
       <Heart />
       <Rings />
+      <Shards />
       <Dust />
     </Canvas>
   );
 }
+

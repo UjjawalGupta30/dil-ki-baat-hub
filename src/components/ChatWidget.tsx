@@ -117,7 +117,7 @@ export function ChatWidget({
           value={draft}
           maxLength={2000}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Type your dil ki baat…"
+          placeholder="Say it however it comes out…"
         />
         <Button type="submit" size="icon" disabled={sending || !draft.trim()}>
           <Send className="size-4" />

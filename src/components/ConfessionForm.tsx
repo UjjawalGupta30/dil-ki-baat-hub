@@ -83,7 +83,7 @@ export function ConfessionForm({
 
     setLoading(true);
     const id = crypto.randomUUID();
-    const alias = `Gumnam Dost #${Math.floor(100 + Math.random() * 900)}`;
+    const alias = `Anonymous Friend #${Math.floor(100 + Math.random() * 900)}`;
 
     const { error } = await supabase.from("submissions").insert({
       id,
@@ -107,7 +107,7 @@ export function ConfessionForm({
       return;
     }
 
-    toast.success("Your Dil Ki Baat has been heard 🤍");
+    toast.success("Received. Someone will read this with care \u{1F90D}");
     setContent("");
     setCategories([]);
     setQuestion("");
@@ -131,8 +131,11 @@ export function ConfessionForm({
   return (
     <form onSubmit={submit} className="space-y-11 text-ink">
       <div className="space-y-3">
-        <Ask htmlFor="content" hint="A situation, a doubt, an emotion — anything.">
-          What&apos;s on your mind?
+        <Ask
+          htmlFor="content"
+          hint="There's no right way to start. A sentence is enough. So is a page."
+        >
+          What&apos;s sitting heavy today?
         </Ask>
         <textarea
           id="content"
@@ -140,13 +143,20 @@ export function ConfessionForm({
           onChange={(e) => setContent(e.target.value)}
           maxLength={5000}
           rows={6}
-          placeholder="Likh dijiye… jo dil mein hai."
+          placeholder="Start anywhere — even in the middle."
           className="ink-line w-full resize-y px-0 py-3 text-lg leading-relaxed text-ink placeholder:text-ink/35"
         />
+        <p className="text-xs text-ink/45">
+          Nobody sees your name, because we never ask for it.
+        </p>
       </div>
 
+
       <fieldset className="space-y-3">
-        <legend className="font-display text-[1.35rem] italic text-ink">Is it related to…</legend>
+        <legend className="font-display text-[1.35rem] italic text-ink">
+          What is this really about?
+        </legend>
+        <p className="text-sm text-ink/55">Pick as many as feel true. Naming it helps.</p>
         <div className="flex flex-wrap gap-2 pt-1">
           {CATEGORIES.map((c) => (
             <button
@@ -164,8 +174,11 @@ export function ConfessionForm({
 
       <fieldset className="space-y-3">
         <legend className="font-display text-[1.35rem] italic text-ink">
-          Advice, just to vent, or both?
+          What would help most right now?
         </legend>
+        <p className="text-sm text-ink/55">
+          You are allowed to want nothing but a listener.
+        </p>
         <div className="flex flex-wrap gap-2 pt-1">
           {INTENTS.map((i) => (
             <button
@@ -183,8 +196,9 @@ export function ConfessionForm({
 
       <fieldset className="space-y-3">
         <legend className="font-display text-[1.35rem] italic text-ink">
-          How are you feeling right now?
+          Where are you on the scale today?
         </legend>
+        <p className="text-sm text-ink/55">Honest, not brave. Nobody is grading this.</p>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3 pt-1">
           <span className="text-xs uppercase tracking-widest text-ink/45">Very low</span>
           <div className="flex gap-2">
@@ -211,7 +225,9 @@ export function ConfessionForm({
       </fieldset>
 
       <div className="space-y-2">
-        <Ask htmlFor="question">Any question you want the community to answer?</Ask>
+        <Ask htmlFor="question" hint="One question is often enough to unlock the right reply.">
+          Is there something you want people to answer?
+        </Ask>
         <input
           id="question"
           value={question}
@@ -224,8 +240,11 @@ export function ConfessionForm({
 
       <fieldset className="space-y-3">
         <legend className="font-display text-[1.35rem] italic text-ink">
-          Highlight your story on Instagram?
+          May we share this story (anonymously) on Instagram?
         </legend>
+        <p className="text-sm text-ink/55">
+          Only your words travel. Never a name, never a hint of you.
+        </p>
         <div className="flex flex-wrap gap-2 pt-1">
           {HIGHLIGHT_OPTIONS.map((h) => (
             <button
@@ -242,13 +261,15 @@ export function ConfessionForm({
       </fieldset>
 
       <div className="space-y-2">
-        <Ask htmlFor="nickname">Set a nickname for your story</Ask>
+        <Ask htmlFor="nickname" hint="A quiet way to find your own story later.">
+          Give this story a name
+        </Ask>
         <input
           id="nickname"
           value={nickname}
           maxLength={40}
           onChange={(e) => setNickname(e.target.value)}
-          placeholder="Optional — e.g. Chhoti si baat"
+          placeholder="Optional — something only you would recognise"
           className="ink-line w-full px-0 py-2.5 text-ink placeholder:text-ink/35"
         />
       </div>
@@ -257,9 +278,11 @@ export function ConfessionForm({
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0">
             <p className="font-display text-[1.2rem] italic text-ink">
-              Open a live chat with a mentor
+              Would you like to talk it through, live?
             </p>
-            <p className="text-sm text-ink/55">A private, anonymous, disappearing conversation.</p>
+            <p className="text-sm text-ink/55">
+              A private conversation with a mentor that erases itself when you choose.
+            </p>
           </div>
           <button
             type="button"
@@ -324,7 +347,7 @@ export function ConfessionForm({
         <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-plum via-ember to-plum opacity-70 transition-transform duration-700 group-hover:translate-x-0" />
         <span className="relative inline-flex items-center justify-center gap-2">
           {loading && <Loader2 className="size-4 animate-spin" />}
-          Share anonymously
+          Let it out
         </span>
       </button>
     </form>
