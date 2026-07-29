@@ -233,7 +233,8 @@ export function VectorScenes() {
           ))}
         </g>
         {/* seated figure */}
-        <g transform={`translate(${W / 2} 470)`} data-motion="float" data-speed="0.5" data-amp="0.5">
+        <g transform={`translate(${W / 2} 470)`}>
+        <g data-motion="float" data-speed="0.5" data-amp="0.5">
           <circle cx="0" cy="-46" r="30" fill="#F7F4EF" opacity="0.92" />
           <path
             d="M -44 62 C -44 6, -26 -12, 0 -12 C 26 -12, 44 6, 44 62 Z"
@@ -242,6 +243,7 @@ export function VectorScenes() {
           />
           <path d="M -66 62 L 66 62" stroke="#FFB800" strokeWidth="3" opacity="0.5" />
           <circle cx="0" cy="4" r="12" fill="#FFB800" opacity="0.55" filter="url(#glow)" />
+        </g>
         </g>
         {/* floating notification vectors */}
         {Array.from({ length: 16 }).map((_, i) => {
@@ -355,13 +357,12 @@ export function VectorScenes() {
             key={i}
             transform={`translate(${x} 640) scale(${dir} 1)`}
             opacity={0.35 - i * 0.04}
-            data-motion="float"
-            data-seed={rnd(i + 4)}
-            data-speed="0.4"
           >
+            <g data-motion="float" data-seed={rnd(i + 4)} data-speed="0.4">
             <circle cx="0" cy="-84" r="22" fill="#C89BE8" />
             <path d="M -30 60 C -30 -30, 30 -30, 30 60 Z" fill="#C89BE8" />
             <path d="M 30 -30 L 74 -120" stroke="#C89BE8" strokeWidth="6" strokeLinecap="round" />
+            </g>
           </g>
         ))}
       </g>
@@ -578,10 +579,8 @@ export function VectorScenes() {
           <g
             key={i}
             transform={`translate(${b.x} 420) scale(${b.dir} 1)`}
-            data-motion="flyIn"
-            data-seed={i / 2}
-            data-amp={b.dir}
           >
+            <g data-motion="flyIn" data-seed={i / 2} data-amp={b.dir}>
             <g filter="url(#glow)">
               <path
                 d="M -46 0 C -30 -44, 30 -44, 52 0 C 30 34, -26 34, -46 0 Z"
@@ -598,6 +597,7 @@ export function VectorScenes() {
                 data-speed="1.8"
                 data-amp="0.4"
               />
+            </g>
             </g>
           </g>
         ))}
@@ -664,10 +664,8 @@ export function VectorScenes() {
                 x < 0 ? 1 : -1
               } 1)`}
               opacity="0.9"
-              data-motion="float"
-              data-seed={rnd(i + 20)}
-              data-speed="0.35"
             >
+              <g data-motion="float" data-seed={rnd(i + 20)} data-speed="0.35">
               <circle cx="0" cy="-58" r="24" fill="#2A1608" stroke="#FFB35C" strokeWidth="2" />
               <path
                 d="M -34 44 C -34 -14, 34 -14, 34 44 Z"
@@ -675,6 +673,7 @@ export function VectorScenes() {
                 stroke="#FFB35C"
                 strokeWidth="2"
               />
+              </g>
             </g>
           ))}
         </g>
