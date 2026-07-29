@@ -364,6 +364,7 @@ export default function NarrativeCanvas() {
     >
       <Rig />
       <Cloud />
+      <mesh><boxGeometry args={[3,3,3]} /><meshBasicMaterial color="red" /></mesh>
     </Canvas>
   );
 }
