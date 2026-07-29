@@ -7,7 +7,7 @@ const GOLD = new THREE.Color("#FFB800");
 const SUNSET = new THREE.Color("#E59866");
 const AURA = new THREE.Color("#8E24AA");
 
-const FRAGMENTS = 220;
+const FRAGMENTS = 150;
 const DUST = 900;
 
 function clamp01(v: number) {
@@ -81,7 +81,7 @@ function Core() {
       );
 
       seeds.push(Math.random() * Math.PI * 2);
-      scales.push(0.026 + Math.random() * 0.05);
+      scales.push(0.02 + Math.random() * 0.038);
     }
     return { closed, open, ring, seeds, scales };
   }, []);
@@ -138,7 +138,7 @@ function Core() {
         3,
         dt,
       );
-      const target = 1 + aura * 0.65 - portal * 0.1;
+      const target = 0.92 + aura * 0.6 - portal * 0.08;
       const sc = damp(group.current.scale.x, target, 3, dt);
       group.current.scale.setScalar(sc);
       group.current.position.y = damp(group.current.position.y, -p * 0.6, 2.5, dt);
