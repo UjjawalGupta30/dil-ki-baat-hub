@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Mic } from "lucide-react";
 import { HelpModal } from "@/components/HelpModal";
+import { AudioToggle } from "@/components/AudioToggle";
 
 export function SiteHeader() {
   return (
@@ -29,6 +30,7 @@ export function SiteHeader() {
           >
             Terms
           </Link>
+          <AudioToggle />
           <HelpModal />
         </div>
       </div>

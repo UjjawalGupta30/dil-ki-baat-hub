@@ -29,7 +29,7 @@ export function AudioToggle() {
       onClick={() => void toggleAudio()}
       aria-pressed={on}
       aria-label={on ? "Mute ambient audio" : "Unmute ambient audio"}
-      className="fixed bottom-5 right-5 z-50 grid size-11 place-items-center rounded-full border border-primary/25 bg-background/40 text-primary/80 backdrop-blur-md transition-all duration-500 hover:border-primary/60 hover:text-primary sm:bottom-7 sm:right-7"
+      className="relative grid size-9 place-items-center rounded-full border border-primary/25 bg-primary/5 text-primary/80 backdrop-blur-md transition-all duration-500 hover:border-primary/60 hover:text-primary"
     >
       <span
         className={`absolute inset-0 rounded-full bg-primary/10 transition-opacity duration-700 ${on ? "animate-pulse-ring opacity-100" : "opacity-0"}`}
