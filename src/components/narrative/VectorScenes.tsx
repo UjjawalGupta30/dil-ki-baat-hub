@@ -565,9 +565,9 @@ export function VectorScenes() {
       {/* ─── ACT 7 · the empathetic bridge ──────────────────────── */}
       <g ref={setScene(6)} data-scene="7" style={{ transformOrigin: "50% 50%" }}>
         <rect
-          x={W / 2 - 420}
+          x={W / 2 - 300}
           y={636}
-          width="840"
+          width="600"
           height="4"
           rx="2"
           fill="url(#beamGrad)"
@@ -576,8 +576,8 @@ export function VectorScenes() {
           filter="url(#glow)"
         />
         {[
-          { x: 380, dir: 1, color: "#7FE3C0" },
-          { x: W - 250, dir: -1, color: "#FFE9A8" },
+          { x: 470, dir: 1, color: "#7FE3C0" },
+          { x: 970, dir: -1, color: "#FFE9A8" },
         ].map((b, i) => (
           <g
             key={i}
@@ -607,7 +607,7 @@ export function VectorScenes() {
         {Array.from({ length: 26 }).map((_, i) => (
           <circle
             key={i}
-            cx={W / 2 + (rnd(i) - 0.5) * 760}
+            cx={W / 2 + (rnd(i) - 0.5) * 620}
             cy={638 + (rnd(i + 5) - 0.5) * 150}
             r={1 + rnd(i + 9) * 2.4}
             fill="#FFE9A8"
