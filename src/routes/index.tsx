@@ -1,15 +1,15 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import { createFileRoute, ClientOnly } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { NarrativeStage } from "@/components/narrative/NarrativeStage";
 import { ColorBed } from "@/components/narrative/ColorBed";
+import { VectorScenes } from "@/components/narrative/VectorScenes";
 import { ChatSheet } from "@/components/ChatSheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { scrollState } from "@/lib/scroll-state";
 import { playRelease } from "@/lib/audio-engine";
 
-const NarrativeCanvas = lazy(() => import("@/components/three/NarrativeCanvas"));
 
 export const Route = createFileRoute("/")({
   head: () => ({
