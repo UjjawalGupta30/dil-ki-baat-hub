@@ -1,46 +1,45 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { scrollState } from "@/lib/scroll-state";
-import { playClick, setScrollProgress } from "@/lib/audio-engine";
-
-const MILESTONES = [0.25, 0.5, 0.75];
+import { scrollControls, scrollState } from "@/lib/scroll-state";
+import { MILESTONES } from "@/lib/story";
+import { playClick, playShatter, setScrollProgress } from "@/lib/audio-engine";
 
 /**
- * Silk scroll physics. Lenis drives the scroll position, GSAP's ticker drives
- * Lenis, and ScrollTrigger is told to update from the same loop so every
- * scroll-linked animation stays in perfect sync with the WebGL core.
- *
- * The same normalised progress also drives the synthesiser: filter cutoff
- * rides the journey and each quarter mark fires a tactile click.
+ * Silk scroll physics and the master clock of the whole story. Lenis drives
+ * the scroll position, GSAP's ticker drives Lenis, and one normalised
+ * progress value (0 -> 1) is pushed to the WebGL scene, the DOM acts and the
+ * synthesiser from the same loop.
  */
 export function SmoothScroll() {
   useEffect(() => {
-    const passed = new Set<number>();
+    const fired = new Set<number>();
 
-    const commit = (progress: number, velocity: number) => {
+    const publish = (progress: number, velocity: number) => {
       scrollState.progress = progress;
       scrollState.velocity = gsap.utils.clamp(-1, 1, velocity / 40);
       setScrollProgress(progress);
-      MILESTONES.forEach((m) => {
-        if (progress >= m && !passed.has(m)) {
-          passed.add(m);
-          playClick(0.8 + m * 0.5);
-        } else if (progress < m - 0.02) {
-          passed.delete(m);
+
+      MILESTONES.forEach((m, i) => {
+        if (progress >= m && !fired.has(i)) {
+          fired.add(i);
+          if (i === 0) playShatter();
+          else playClick(1 - i * 0.15);
+        } else if (progress < m - 0.03) {
+          fired.delete(i);
         }
       });
     };
 
-    // Reduced motion: no smooth scrolling, but the scene still needs progress.
+    // Reduced motion: no smoothing, but the story still needs its clock.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const onNative = () => {
+      const onScroll = () => {
         const max = document.documentElement.scrollHeight - window.innerHeight;
-        commit(max > 0 ? window.scrollY / max : 0, 0);
+        publish(max > 0 ? window.scrollY / max : 0, 0);
       };
-      onNative();
-      window.addEventListener("scroll", onNative, { passive: true });
-      return () => window.removeEventListener("scroll", onNative);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
     }
 
     const lenis = new Lenis({
@@ -50,8 +49,14 @@ export function SmoothScroll() {
       touchMultiplier: 1.4,
     });
 
+    scrollControls.to = (p: number) => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      lenis.scrollTo(max * p, { duration: 1.6 });
+    };
+
     const onScroll = ({ progress, velocity }: { progress: number; velocity: number }) =>
-      commit(progress, velocity);
+      publish(progress, velocity);
+
     lenis.on("scroll", onScroll);
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -69,6 +74,7 @@ export function SmoothScroll() {
       window.removeEventListener("pointermove", pointer);
       gsap.ticker.remove(raf);
       lenis.destroy();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
