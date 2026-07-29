@@ -101,12 +101,68 @@ export function toggleAudio() {
   return enabled ? (disableAudio(), Promise.resolve()) : enableAudio();
 }
 
-/** Filter cutoff rides the scroll: 120 Hz at the top, 800 Hz at the end. */
+/** Filter cutoff rides the scroll: 100 Hz at the top, 800 Hz at the end. */
 export function setScrollProgress(p: number) {
   if (!ctx || !filter || !enabled) return;
-  const target = 120 + Math.min(1, Math.max(0, p)) * 680;
-  filter.frequency.setTargetAtTime(target, ctx.currentTime, 0.25);
+  const t = Math.min(1, Math.max(0, p));
+  filter.frequency.setTargetAtTime(100 + t * 700, ctx.currentTime, 0.25);
+  // the sub-bass swells slightly as the story deepens
+  master?.gain.setTargetAtTime(0.13 + t * 0.06, ctx.currentTime, 0.6);
 }
+
+/** Glass-crack burst for the moment the monolith shatters. */
+export function playShatter() {
+  if (!ctx || !enabled || !master || !noiseBuffer) return;
+  const now = ctx.currentTime;
+  for (let i = 0; i < 4; i++) {
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer;
+    src.playbackRate.value = 0.8 + Math.random() * 1.6;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = 9;
+    const t = now + i * 0.035;
+    bp.frequency.setValueAtTime(3200 + Math.random() * 2200, t);
+    bp.frequency.exponentialRampToValueAtTime(700, t + 0.4);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.16, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    src.connect(bp).connect(g).connect(master);
+    src.start(t);
+    src.stop(t + 0.55);
+  }
+}
+
+/** Act 5 — the dark hum resolves into a warm major triad (A4, C#5, E5). */
+export function setWarmth(on: boolean) {
+  if (!ctx || !voices.length) return;
+  const t = ctx.currentTime;
+  const dark = [55, 110, 82.4];
+  const warm = [55, 220, 110];
+  voices.forEach((v, i) => {
+    v.osc.frequency.setTargetAtTime(on ? warm[i] : dark[i], t, 1.2);
+  });
+  if (on) playTriad([440, 554.37, 659.25], 3.4, 0.055);
+}
+
+function playTriad(freqs: number[], length: number, level: number) {
+  if (!ctx || !enabled || !master) return;
+  freqs.forEach((f, i) => {
+    const osc = ctx!.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = f;
+    const g = ctx!.createGain();
+    const t = ctx!.currentTime + i * 0.09;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(level, t + 0.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + length);
+    osc.connect(g).connect(master!);
+    osc.start(t);
+    osc.stop(t + length + 0.1);
+  });
+}
+
 
 /** Short resonant burst used for scroll milestones. */
 export function playClick(intensity = 1) {
@@ -126,20 +182,21 @@ export function playClick(intensity = 1) {
   src.stop(ctx.currentTime + 0.15);
 }
 
-/** Soft bell used when a sentiment is focused. */
-export function playChime(freq = 880) {
+/** Short pentatonic bell used when a floating script is focused. */
+export function playChime(freq = 440) {
   if (!ctx || !enabled || !master) return;
   const osc = ctx.createOscillator();
   osc.type = "triangle";
   osc.frequency.value = freq;
   const g = ctx.createGain();
   g.gain.setValueAtTime(0.0001, ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.075, ctx.currentTime + 0.02);
-  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.1);
+  g.gain.exponentialRampToValueAtTime(0.07, ctx.currentTime + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.34);
   osc.connect(g).connect(master);
   osc.start();
-  osc.stop(ctx.currentTime + 1.2);
+  osc.stop(ctx.currentTime + 0.4);
 }
+
 
 /** Warm major chord for the moment a confession is released. */
 export function playRelease() {
