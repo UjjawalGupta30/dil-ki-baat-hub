@@ -175,7 +175,7 @@ function Index() {
               }
             >
               <article className="relative">
-                <span className="pointer-events-none absolute -left-3 -top-16 select-none font-display text-[7rem] leading-none text-plum/40 sm:-top-20 sm:text-[9rem]">
+                <span className="pointer-events-none absolute -left-4 -top-20 select-none font-display text-[7rem] leading-none text-plum/30 sm:-top-28 sm:text-[10rem]">
                   {s.n}
                 </span>
                 <div className="relative">
