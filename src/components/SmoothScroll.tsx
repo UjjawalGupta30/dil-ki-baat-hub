@@ -15,6 +15,19 @@ export function SmoothScroll() {
   useEffect(() => {
     const fired = new Set<number>();
 
+    /** The story section, not the document, is the clock: a footer can follow it. */
+    const track = () => {
+      const el = document.getElementById("story");
+      const top = el ? el.offsetTop : 0;
+      const height = el ? el.offsetHeight : document.documentElement.scrollHeight;
+      return { top, span: Math.max(1, height - window.innerHeight) };
+    };
+
+    const fromScrollY = (y: number) => {
+      const { top, span } = track();
+      return Math.min(1, Math.max(0, (y - top) / span));
+    };
+
     const publish = (progress: number, velocity: number) => {
       scrollState.progress = progress;
       scrollState.velocity = gsap.utils.clamp(-1, 1, velocity / 40);
@@ -35,10 +48,7 @@ export function SmoothScroll() {
 
     // Reduced motion: no smoothing, but the story still needs its clock.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const onScroll = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        publish(max > 0 ? window.scrollY / max : 0, 0);
-      };
+      const onScroll = () => publish(fromScrollY(window.scrollY), 0);
       onScroll();
       window.addEventListener("scroll", onScroll, { passive: true });
       return () => window.removeEventListener("scroll", onScroll);
@@ -52,12 +62,12 @@ export function SmoothScroll() {
     });
 
     scrollControls.to = (p: number) => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      lenis.scrollTo(max * p, { duration: 1.6 });
+      const { top, span } = track();
+      lenis.scrollTo(top + span * p, { duration: 1.6 });
     };
 
-    const onScroll = ({ progress, velocity }: { progress: number; velocity: number }) =>
-      publish(progress, velocity);
+    const onScroll = ({ scroll, velocity }: { scroll: number; velocity: number }) =>
+      publish(fromScrollY(scroll), velocity);
 
     lenis.on("scroll", onScroll);
     lenis.on("scroll", ScrollTrigger.update);

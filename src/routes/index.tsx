@@ -5,6 +5,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { NarrativeStage } from "@/components/narrative/NarrativeStage";
 import { ColorBed } from "@/components/narrative/ColorBed";
 import { ChatSheet } from "@/components/ChatSheet";
+import { SiteFooter } from "@/components/SiteFooter";
 import { scrollState } from "@/lib/scroll-state";
 import { playRelease } from "@/lib/audio-engine";
 
@@ -76,10 +77,14 @@ function Index() {
 
       <SiteHeader />
 
-      <NarrativeStage room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
+      {/* the story section owns the scroll clock; the footer lives after it */}
+      <section id="story" className="relative w-full">
+        <NarrativeStage room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
+        {/* the 800vh track that scrubs the eight acts */}
+        <div aria-hidden="true" className="h-[800vh] w-full" />
+      </section>
 
-      {/* the 800vh track that scrubs the eight acts */}
-      <div aria-hidden="true" className="h-[800vh] w-full" />
+      <SiteFooter />
 
       {room && (
         <ChatSheet

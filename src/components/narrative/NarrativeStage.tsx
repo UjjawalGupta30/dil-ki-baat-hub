@@ -99,21 +99,15 @@ export function NarrativeStage({
         <ActLayer ref={setLayer(1)} act={ACTS[1]}>
           <Heading>Loneliness is not weakness. It is an alarm.</Heading>
           <Body>{ACTS[1].body}</Body>
-          <Body muted>
-            The ache you feel at 2 AM is the same circuitry that once kept your ancestors close to
-            the fire. It is old, it is loud, and it is not your fault.
-          </Body>
         </ActLayer>
 
         {/* ACT 3 — the industrial drift */}
         <ActLayer ref={setLayer(2)} act={ACTS[2]}>
           <Heading>We built cities, and forgot the fire.</Heading>
           <Body>{ACTS[2].body}</Body>
-          <ul className="mt-6 space-y-2 text-sm text-cream/60 sm:text-base">
-            <li>A thousand contacts. Nobody to call at 2 AM.</li>
-            <li>Every window lit. Every window separate.</li>
-            <li>We answer “how are you?” before we ever ask ourselves.</li>
-          </ul>
+          <p className="mt-6 text-sm text-cream/55 sm:text-base">
+            A thousand contacts. Nobody to call at 2 AM.
+          </p>
         </ActLayer>
 
         {/* ACT 4 — the vicious cycle */}
@@ -151,8 +145,8 @@ export function NarrativeStage({
         <ActLayer ref={setLayer(5)} act={ACTS[5]} wide>
           <div className="mx-auto w-full max-w-2xl text-left">
             <Heading small>Release it to the void.</Heading>
-            <p className="mt-3 max-w-xl text-sm text-cream/65 sm:text-base">{ACTS[5].body}</p>
-            <div className="mt-6 max-h-[54svh] overflow-y-auto pr-1">
+            <p className="mt-2 max-w-lg text-sm text-cream/65">{ACTS[5].body}</p>
+            <div className="mt-4 max-h-[66svh] overflow-y-auto pr-1">
               <ConfessionWizard onStartChat={onStartChat} />
             </div>
           </div>
@@ -162,10 +156,7 @@ export function NarrativeStage({
         <ActLayer ref={setLayer(6)} act={ACTS[6]}>
           <Heading>Someone on the other side has stood exactly here.</Heading>
           <Body>{ACTS[6].body}</Body>
-          <Body muted>
-            Every story that lands here is read by a real person. Not a bot, not a feed, not an
-            algorithm deciding whether your pain performs well.
-          </Body>
+          <Body muted>Every story here is read by a real person. Not a bot, not a feed.</Body>
         </ActLayer>
 
         {/* ACT 8 — the human sanctuary */}
