@@ -8,23 +8,25 @@ import { ConfessionForm } from "@/components/ConfessionForm";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Reveal, RevealWords } from "@/components/Reveal";
 import { ScrollWord } from "@/components/ScrollFrames";
+import { SceneLayer } from "@/components/SceneLayer";
+import { DropBox } from "@/components/DropBox";
 import { FAQS, WHISPERS, WHY_IT_WORKS } from "@/lib/dilkibaat";
 
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dil Ki Baat — Say It Anonymously, Be Heard Honestly" },
+      { title: "Dil Ki Baat, Say It Anonymously and Be Heard Honestly" },
       {
         name: "description",
         content:
           "A quiet, anonymous place to put down what you carry. Write it, be read without judgement, and hear honest perspective from people who have stood where you stand.",
       },
-      { property: "og:title", content: "Dil Ki Baat — Say It Anonymously, Be Heard Honestly" },
+      { property: "og:title", content: "Dil Ki Baat, Say It Anonymously and Be Heard Honestly" },
       {
         property: "og:description",
         content:
-          "No names. No judgement. Just your words, received with care — and honest perspective in return.",
+          "No names. No judgement. Just your words, received with care, and honest perspective in return.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -41,21 +43,21 @@ const STEPS = [
     w: "Write",
     hi: "The first sentence",
     t: "You write it down",
-    d: "No name, no sign-up, no explanation owed to anyone. Type it the way it actually sounds at 2am — half-sentences and all. The messy version is the honest one.",
+    d: "No name, no sign up, no explaining yourself. The messy version is the honest one.",
   },
   {
     n: "02",
     w: "Held",
     hi: "Our part of the promise",
     t: "We hold it carefully",
-    d: "Your words stay exactly as you wrote them, with every trace of you stripped out before another human reads a line. No screenshots, no receipts, no sharing without your yes.",
+    d: "Your words stay exactly as you wrote them, with every trace of you stripped out first.",
   },
   {
     n: "03",
     w: "Heard",
     hi: "What comes back",
     t: "People answer honestly",
-    d: "Perspective, lived experience, and the occasional uncomfortable truth — from people who once needed to hear it themselves. No toxic positivity, no lectures.",
+    d: "Real perspective from people who once needed to hear it themselves. No lectures.",
   },
 ];
 
@@ -123,15 +125,10 @@ function Index() {
             className="mt-8 max-w-xl space-y-4 text-pretty text-lg text-muted-foreground sm:ml-auto sm:mr-[6%] sm:text-right"
           >
             <p>
-              The 2am overthinking. The situationship you can't explain to anyone. The pressure to
-              have it all figured out by 25. The group chat where everyone's doing great and you're
-              just… coping.
+              The 2am overthinking. The thing you cannot explain to anyone. The pressure to have it
+              all figured out already.
             </p>
-            <p>
-              You don't have to perform here. Type it messy, type it half-finished, type it the way
-              it actually sounds in your head. Real people read it and answer like humans, not like
-              a self-help caption.
-            </p>
+            <p className="text-cream/70">Write it here. A real person reads it.</p>
           </motion.div>
 
           <motion.div
@@ -195,6 +192,7 @@ function Index() {
 
       {/* ── Frame 3 · three steps, told in single words ─────── */}
       <section className="relative mx-auto max-w-6xl overflow-hidden px-6 pb-24 sm:px-10 sm:pb-36">
+        <SceneLayer count={220} spread={16} shape="octa" />
         <Reveal from="left">
           <p className="text-[0.62rem] uppercase tracking-[0.42em] text-ember/80">
             Three steps · about four minutes
@@ -222,6 +220,7 @@ function Index() {
 
       {/* ── Frame 4 · why writing it down works ─────────────── */}
       <section className="relative mx-auto max-w-6xl overflow-hidden px-6 pb-24 sm:px-10 sm:pb-36">
+        <SceneLayer count={240} spread={17} shape="torus" />
         <Reveal from="none">
           <p className="text-[0.62rem] uppercase tracking-[0.42em] text-ember/80">
             Why this actually helps
@@ -250,6 +249,7 @@ function Index() {
 
       {/* ── Frame 5 · the whisper wall ──────────────────────── */}
       <section className="relative overflow-hidden px-6 pb-28 sm:px-10 sm:pb-40">
+        <SceneLayer count={200} spread={19} showForm={false} />
         <div className="mx-auto max-w-5xl">
           <Reveal from="none">
             <h2 className="text-center font-display text-[clamp(1.6rem,4vw,2.6rem)] text-cream/85">
@@ -297,7 +297,8 @@ function Index() {
       </section>
 
       {/* ── Frame 7 · the letter ────────────────────────────── */}
-      <section id="share" className="relative scroll-mt-6 px-5 pb-32 sm:px-10">
+      <section id="share" className="relative scroll-mt-6 overflow-hidden px-5 pb-32 sm:px-10">
+        <SceneLayer count={180} spread={18} showForm={false} />
         <div className="relative mx-auto max-w-3xl">
           <Reveal from="none">
             <div className="mb-12 text-center">
@@ -308,8 +309,7 @@ function Index() {
                 <strong className="font-semibold text-cream">
                   No names. No judgement. Just your words.
                 </strong>{" "}
-                Take your time — there is no right way to explain a feeling, and nobody is waiting
-                on the other side with a stopwatch.
+                Take your time. There is no right way to explain a feeling.
               </p>
             </div>
           </Reveal>
@@ -333,21 +333,16 @@ function Index() {
       </section>
 
       {/* ── Frame 8 · questions people ask ──────────────────── */}
-      <section className="relative mx-auto max-w-3xl px-6 pb-28 sm:px-10 sm:pb-36">
+      <section className="relative mx-auto max-w-3xl overflow-hidden px-6 pb-28 sm:px-10 sm:pb-36">
+        <SceneLayer count={160} spread={13} shape="icosa" />
         <Reveal from="none">
           <h2 className="font-display text-[clamp(1.5rem,3.6vw,2.3rem)] text-cream/85">
             Questions people <span className="text-gradient-warm italic">usually ask first</span>
           </h2>
         </Reveal>
-        <dl className="mt-12 space-y-10">
-          {FAQS.map((f, i) => (
-            <Reveal key={f.q} from="up" delay={i * 0.06}>
-              <dt className="font-display text-xl italic text-primary">{f.q}</dt>
-              <dd className="mt-3 leading-relaxed text-muted-foreground">{f.a}</dd>
-              <div className="hairline mt-8" />
-            </Reveal>
-          ))}
-        </dl>
+        <Reveal delay={0.1} className="mt-10">
+          <DropBox items={FAQS} />
+        </Reveal>
       </section>
 
       <SiteFooter />
