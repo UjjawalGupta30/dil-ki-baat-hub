@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, ShieldCheck } from "lucide-react";
 
 const EMAIL = "dil.ki.baat.humare.sath@gmail.com";
-const INSTAGRAM = "https://instagram.com/dilkibaat";
+const INSTAGRAM = "https://instagram.com/dil.ki.baat.sabkesath";
 
 export function SiteFooter() {
   return (
@@ -49,7 +49,7 @@ export function SiteFooter() {
                 >
                   <Instagram className="size-4 shrink-0 text-primary" aria-hidden="true" />
                   <span className="underline decoration-primary/30 underline-offset-4 transition-colors group-hover:decoration-primary">
-                    @dilkibaat
+                    @dil.ki.baat.sabkesath
                   </span>
                 </a>
               </li>
