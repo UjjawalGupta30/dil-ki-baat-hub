@@ -16,7 +16,7 @@ const PROMPT_POSITIONS = [
 export function HeartBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 opacity-90">
+      <div className="absolute inset-0 opacity-80">
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>
             <HeartScene />

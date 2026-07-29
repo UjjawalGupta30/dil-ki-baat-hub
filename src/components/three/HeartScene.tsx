@@ -36,7 +36,7 @@ function Heart() {
     group.current.rotation.y = t * 0.25;
     group.current.rotation.z = Math.PI;
     group.current.position.y = Math.sin(t * 0.6) * 0.14;
-    const pulse = 1 + Math.sin(t * 1.6) * 0.02;
+    const pulse = 0.42 * (1 + Math.sin(t * 1.6) * 0.02);
     group.current.scale.setScalar(pulse);
   });
 
@@ -44,7 +44,7 @@ function Heart() {
     <group ref={group}>
       <lineSegments>
         <wireframeGeometry args={[geo]} />
-        <lineBasicMaterial color="#D4AF37" transparent opacity={0.42} />
+        <lineBasicMaterial color="#D4AF37" transparent opacity={0.5} />
       </lineSegments>
       <mesh geometry={geo}>
         <meshBasicMaterial color="#7a2018" transparent opacity={0.18} />
@@ -91,7 +91,7 @@ function Particles({ count = 420 }: { count?: number }) {
 export default function HeartScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6.2], fov: 48 }}
+      camera={{ position: [0, 0, 6.2], fov: 42 }}
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
     >
