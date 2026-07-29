@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/accordion";
 import { FAQS, WHISPERS, WHY_IT_WORKS } from "@/lib/dilkibaat";
 import { scrollState } from "@/lib/scroll-state";
+import { AudioToggle } from "@/components/AudioToggle";
+import { playRelease } from "@/lib/audio-engine";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,8 +59,10 @@ function Index() {
   const [room, setRoom] = useState<Room | null>(null);
 
   // ACT 4 — once a conversation opens, the core widens into a calm aura
+  // and the drone resolves into a warm harmonic chord.
   useEffect(() => {
     scrollState.connected = !!room;
+    if (room) playRelease();
     return () => {
       scrollState.connected = false;
     };
@@ -68,7 +72,9 @@ function Index() {
     <div className="grain relative min-h-screen">
       <SmoothScroll />
       <CoreCanvas />
+      <AudioToggle />
       <SiteHeader />
+
 
       {/* ── ACT 1 · the weight ─────────────────────────────── */}
       <Hero />

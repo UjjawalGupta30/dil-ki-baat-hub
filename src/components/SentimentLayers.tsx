@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
 import { setFocus, clearFocus } from "@/lib/scroll-state";
+import { playChime } from "@/lib/audio-engine";
 
 /**
  * ACT 2 — the sentiments drift past on four parallax Z layers. Nothing sits
@@ -64,12 +65,15 @@ export function SentimentLayers() {
       ref={root}
       className="relative mx-auto flex max-w-6xl flex-col gap-16 px-5 py-24 sm:gap-24 sm:px-8 sm:py-40"
     >
-      {LAYERS.map((l) => (
+      {LAYERS.map((l, i) => (
         <p
           key={l.text}
           data-layer
           data-speed={l.speed}
-          onPointerEnter={(e) => setFocus(e.clientX, e.clientY)}
+          onPointerEnter={(e) => {
+            setFocus(e.clientX, e.clientY);
+            playChime([659.25, 783.99, 880, 987.77][i % 4]);
+          }}
           onPointerMove={(e) => setFocus(e.clientX, e.clientY)}
           onPointerLeave={clearFocus}
           className={`max-w-3xl cursor-default font-display italic leading-[1.08] transition-[filter,opacity,letter-spacing] duration-700 hover:blur-0 hover:tracking-[0.005em] hover:opacity-100 ${l.className}`}

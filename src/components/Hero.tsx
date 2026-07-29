@@ -39,12 +39,27 @@ export function Hero() {
         ease: EASE,
       });
 
-      // dissolve into depth on scroll
-      gsap.to("[data-hero-stage]", {
-        z: -700,
-        scale: 0.82,
+      // ACT 1 — the letters scale up through Z and fly past the camera
+      gsap.to(split.chars, {
+        z: 900,
+        scale: 1.6,
         autoAlpha: 0,
-        filter: "blur(14px)",
+        filter: "blur(16px)",
+        ease: "none",
+        stagger: { each: 0.012, from: "center" },
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+      });
+
+      // everything else recedes quietly into depth
+      gsap.to("[data-hero-fade]", {
+        z: -600,
+        autoAlpha: 0,
+        filter: "blur(10px)",
         ease: "none",
         scrollTrigger: {
           trigger: root.current,
@@ -53,6 +68,7 @@ export function Hero() {
           scrub: 0.8,
         },
       });
+
 
       return () => split.revert();
     },
@@ -67,8 +83,10 @@ export function Hero() {
     >
       <div
         data-hero-stage
+        style={{ transformStyle: "preserve-3d" }}
         className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center will-change-transform"
       >
+
         <p
           data-hero-fade
           className="mb-8 text-[0.55rem] uppercase tracking-[0.42em] text-primary/70 sm:text-[0.62rem]"
@@ -78,8 +96,10 @@ export function Hero() {
 
         <h1
           data-hero-title
+          style={{ transformStyle: "preserve-3d" }}
           className="invisible text-balance font-display text-[clamp(2.6rem,9vw,6.4rem)] font-normal leading-[1.02] text-cream drop-shadow-[0_18px_60px_rgba(0,0,0,0.7)]"
         >
+
           Say the thing you never say.
         </h1>
 
