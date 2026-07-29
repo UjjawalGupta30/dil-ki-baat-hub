@@ -56,7 +56,7 @@ export function Hero() {
       {/* 3D pulse sphere, behind everything, never intercepts clicks */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-70 sm:opacity-90"
+        className="pointer-events-none absolute inset-0 opacity-60 sm:opacity-80"
       >
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>

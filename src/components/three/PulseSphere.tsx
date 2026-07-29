@@ -17,7 +17,7 @@ function Orb() {
   const mesh = useRef<THREE.Mesh>(null);
   const halo = useRef<THREE.Mesh>(null);
 
-  const geo = useMemo(() => new THREE.IcosahedronGeometry(1.55, 6), []);
+  const geo = useMemo(() => new THREE.IcosahedronGeometry(1.5, 3), []);
   const base = useMemo(() => geo.attributes.position.array.slice() as Float32Array, [geo]);
 
   useFrame(({ clock, pointer }) => {
@@ -54,7 +54,7 @@ function Orb() {
           color={GOLD}
           wireframe
           transparent
-          opacity={0.42}
+          opacity={0.3}
           emissive={GOLD}
           emissiveIntensity={0.5}
         />
@@ -65,7 +65,7 @@ function Orb() {
         <meshBasicMaterial
           color={EMBER}
           transparent
-          opacity={0.11}
+          opacity={0.09}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -80,7 +80,7 @@ function Motes({ count = 420 }: { count?: number }) {
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 2.1 + Math.random() * 2.6;
+      const r = 2.4 + Math.random() * 3.4;
       const th = Math.random() * Math.PI * 2;
       const ph = Math.acos(2 * Math.random() - 1);
       arr[i * 3] = r * Math.sin(ph) * Math.cos(th);
@@ -103,10 +103,10 @@ function Motes({ count = 420 }: { count?: number }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.032}
+        size={0.026}
         color={GOLD}
         transparent
-        opacity={0.75}
+        opacity={0.6}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
         depthWrite={false}
@@ -120,7 +120,7 @@ export default function PulseSphere() {
   return (
     <Canvas
       dpr={[1, 1.7]}
-      camera={{ position: [0, 0, 5.4], fov: 42 }}
+      camera={{ position: [0, 0, 8.6], fov: 40 }}
       gl={{ antialias: true, alpha: true }}
     >
       <ambientLight intensity={0.7} />
