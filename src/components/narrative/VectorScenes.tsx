@@ -51,6 +51,8 @@ export function VectorScenes() {
     const tick = () => {
       const t = (performance.now() - start) / 1000;
       const p = scrollState.progress;
+      // on wide screens the scene slides clear of the type column on the left
+      const shift = window.innerWidth > 980 ? 210 : 0;
 
       // scenes cross-fade with a slight push in depth, never a hard cut
       ACTS.forEach((act, i) => {
@@ -66,7 +68,7 @@ export function VectorScenes() {
         g.style.opacity = a.toFixed(3);
         const s = 0.88 + a * 0.14;
         const drift = (local - 0.5) * 90;
-        g.style.transform = `translate(${(scrollState.px * 18).toFixed(1)}px, ${(
+        g.style.transform = `translate(${(shift + scrollState.px * 18).toFixed(1)}px, ${(
           drift +
           scrollState.py * -12
         ).toFixed(1)}px) scale(${s.toFixed(4)})`;
