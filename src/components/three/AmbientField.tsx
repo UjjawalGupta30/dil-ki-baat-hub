@@ -79,7 +79,7 @@ function WireForm({ shape }: { shape: "icosa" | "torus" | "octa" }) {
     <group ref={g}>
       <lineSegments>
         <wireframeGeometry args={[geo]} />
-        <lineBasicMaterial color="#c9a25e" transparent opacity={0.16} />
+        <lineBasicMaterial color="#c9a25e" transparent opacity={0.1} />
       </lineSegments>
     </group>
   );

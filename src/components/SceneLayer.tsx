@@ -23,7 +23,7 @@ export function SceneLayer({
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden ${className}`}
+      className={`pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-45 sm:opacity-70 ${className}`}
     >
       <ClientOnly fallback={null}>
         <Suspense fallback={null}>

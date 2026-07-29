@@ -7,19 +7,19 @@ const StoryHeart = lazy(() => import("./three/StoryHeart"));
 
 /** Placed loosely around the frame so the words feel like passing thoughts. */
 const PROMPT_POSITIONS = [
-  "left-[2%] top-[16%] -rotate-6",
-  "right-[3%] top-[22%] rotate-3",
-  "left-[5%] bottom-[26%] rotate-2",
-  "right-[5%] bottom-[15%] -rotate-3",
-  "left-[30%] top-[6%] -rotate-2",
-  "right-[22%] bottom-[6%] rotate-5",
-  "left-[13%] top-[45%] rotate-1",
-  "right-[9%] top-[52%] -rotate-4",
-  "left-[44%] bottom-[12%] -rotate-1",
-  "right-[34%] top-[13%] rotate-2",
+  "left-[3%] top-[8%] -rotate-3",
+  "right-[4%] top-[12%] rotate-2",
+  "left-[6%] bottom-[8%] rotate-2",
+  "right-[6%] bottom-[10%] -rotate-2",
+  "left-[34%] top-[4%] -rotate-1",
+  "right-[26%] bottom-[3%] rotate-3",
+  "left-[24%] bottom-[20%] rotate-1",
+  "right-[8%] top-[34%] -rotate-3",
+  "left-[2%] top-[26%] rotate-1",
+  "right-[36%] top-[7%] -rotate-2",
 ];
 
-const TONES = ["text-rose/80", "text-primary/80", "text-ember/75", "text-cream/60"];
+const TONES = ["text-rose/70", "text-primary/70", "text-ember/65", "text-cream/50"];
 
 export function HeartBackground() {
   return (
