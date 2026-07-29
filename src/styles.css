@@ -5,9 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Dil Ki Baat design system — a warm, hand-made palette:
- * wine-black base fused with plum, terracotta ember, dusty rose,
- * muted antique gold (never shiny yellow) and warm paper cream.
+ * Dil Ki Baat design system — obsidian maroon night, brushed antique gold,
+ * warm cream. High-fashion dark theme with vintage Indian nostalgia.
  * All colors are semantic oklch tokens. Never hardcode colors in components.
  */
 
@@ -46,6 +45,7 @@
   --color-plum: var(--plum);
   --color-cream: var(--cream);
   --color-ink: var(--ink);
+  --color-obsidian: var(--obsidian);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -59,85 +59,86 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: "Lora", ui-serif, Georgia, serif;
-  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.9rem;
+  --radius: 1rem;
 
-  /* wine-black */
-  --background: oklch(0.185 0.052 12);
-  --foreground: oklch(0.945 0.016 74);
+  /* deep obsidian maroon */
+  --background: oklch(0.148 0.033 28);
+  --foreground: oklch(0.966 0.008 85);
 
-  --card: oklch(0.245 0.058 5);
-  --card-foreground: oklch(0.952 0.014 74);
-  --popover: oklch(0.235 0.058 5);
-  --popover-foreground: oklch(0.952 0.014 74);
+  --card: oklch(0.203 0.048 26);
+  --card-foreground: oklch(0.966 0.008 85);
+  --popover: oklch(0.185 0.044 26);
+  --popover-foreground: oklch(0.966 0.008 85);
 
-  /* muted antique gold — warm, not shiny */
-  --primary: oklch(0.735 0.098 79);
-  --primary-foreground: oklch(0.19 0.05 12);
+  /* brushed antique gold */
+  --primary: oklch(0.766 0.126 87);
+  --primary-foreground: oklch(0.16 0.038 28);
 
-  --secondary: oklch(0.33 0.075 350);
-  --secondary-foreground: oklch(0.945 0.016 74);
+  --secondary: oklch(0.29 0.07 22);
+  --secondary-foreground: oklch(0.966 0.008 85);
 
-  --muted: oklch(0.295 0.05 8);
-  --muted-foreground: oklch(0.795 0.036 46);
+  --muted: oklch(0.255 0.052 26);
+  --muted-foreground: oklch(0.79 0.028 68);
 
-  /* dusty rose accent */
-  --accent: oklch(0.72 0.072 20);
-  --accent-foreground: oklch(0.19 0.05 12);
+  --accent: oklch(0.83 0.086 84);
+  --accent-foreground: oklch(0.16 0.038 28);
 
   --destructive: oklch(0.6 0.19 25);
   --destructive-foreground: oklch(0.97 0.01 78);
 
-  --border: oklch(0.735 0.098 79 / 18%);
-  --input: oklch(0.735 0.098 79 / 24%);
-  --ring: oklch(0.735 0.098 79 / 55%);
+  --border: oklch(0.766 0.126 87 / 14%);
+  --input: oklch(0.766 0.126 87 / 22%);
+  --ring: oklch(0.766 0.126 87 / 55%);
 
   /* Brand extras */
-  --gold: oklch(0.735 0.098 79);
-  --gold-soft: oklch(0.85 0.06 82);
+  --obsidian: oklch(0.148 0.033 28);
+  --gold: oklch(0.766 0.126 87);
+  --gold-soft: oklch(0.83 0.086 84);
   --rose: oklch(0.755 0.072 22);
   --ember: oklch(0.655 0.132 42);
-  --plum: oklch(0.415 0.108 342);
-  --cream: oklch(0.955 0.014 82);
-  --ink: oklch(0.255 0.045 20);
+  --plum: oklch(0.36 0.09 350);
+  --cream: oklch(0.966 0.008 85);
+  --ink: oklch(0.22 0.045 26);
 
-  --chart-1: oklch(0.735 0.098 79);
+  --chart-1: oklch(0.766 0.126 87);
   --chart-2: oklch(0.655 0.132 42);
   --chart-3: oklch(0.755 0.072 22);
-  --chart-4: oklch(0.545 0.118 342);
+  --chart-4: oklch(0.5 0.11 350);
   --chart-5: oklch(0.68 0.09 200);
 
-  --sidebar: oklch(0.225 0.055 8);
-  --sidebar-foreground: oklch(0.945 0.016 74);
-  --sidebar-primary: oklch(0.735 0.098 79);
-  --sidebar-primary-foreground: oklch(0.19 0.05 12);
-  --sidebar-accent: oklch(0.32 0.075 350);
-  --sidebar-accent-foreground: oklch(0.945 0.016 74);
-  --sidebar-border: oklch(0.735 0.098 79 / 18%);
-  --sidebar-ring: oklch(0.735 0.098 79 / 45%);
+  --sidebar: oklch(0.185 0.044 26);
+  --sidebar-foreground: oklch(0.966 0.008 85);
+  --sidebar-primary: oklch(0.766 0.126 87);
+  --sidebar-primary-foreground: oklch(0.16 0.038 28);
+  --sidebar-accent: oklch(0.28 0.065 24);
+  --sidebar-accent-foreground: oklch(0.966 0.008 85);
+  --sidebar-border: oklch(0.766 0.126 87 / 14%);
+  --sidebar-ring: oklch(0.766 0.126 87 / 45%);
 
+  /* ambient lighting: radial pools of #3B0D0B warmth over obsidian */
   --gradient-dusk: radial-gradient(
-      120% 80% at 78% 6%,
-      oklch(0.36 0.1 342 / 70%) 0%,
-      transparent 62%
+      100% 70% at 78% 2%,
+      oklch(0.25 0.068 30 / 92%) 0%,
+      transparent 60%
     ),
-    radial-gradient(100% 70% at 6% 22%, oklch(0.38 0.11 32 / 52%) 0%, transparent 60%),
-    radial-gradient(120% 90% at 50% 108%, oklch(0.3 0.08 350 / 65%) 0%, transparent 65%),
-    linear-gradient(180deg, oklch(0.185 0.052 12) 0%, oklch(0.16 0.045 8) 100%);
+    radial-gradient(90% 60% at 4% 18%, oklch(0.25 0.068 30 / 78%) 0%, transparent 62%),
+    radial-gradient(120% 80% at 50% 104%, oklch(0.23 0.062 26 / 85%) 0%, transparent 66%),
+    linear-gradient(180deg, oklch(0.148 0.033 28) 0%, oklch(0.128 0.028 24) 100%);
   --gradient-warm: linear-gradient(
     104deg,
     var(--gold-soft) 0%,
-    var(--rose) 34%,
-    var(--ember) 66%,
-    var(--gold) 100%
+    var(--gold) 38%,
+    var(--rose) 66%,
+    var(--gold-soft) 100%
   );
-  --shadow-warm: 0 34px 90px -40px oklch(0 0 0 / 72%);
-  --shadow-lamp: 0 0 120px -20px oklch(0.655 0.132 42 / 28%);
-  --glass: oklch(0.32 0.07 350 / 26%);
+  --shadow-warm: 0 34px 90px -40px oklch(0 0 0 / 78%);
+  --shadow-lamp: 0 0 120px -20px oklch(0.766 0.126 87 / 22%);
+  --glass: oklch(0.12 0.02 26 / 42%);
 }
 
 .dark {
@@ -172,11 +173,11 @@
   .font-display {
     font-family: var(--font-display);
     font-weight: 500;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.014em;
   }
 
   ::selection {
-    background: var(--rose);
+    background: var(--gold);
     color: var(--ink);
   }
 
@@ -187,7 +188,7 @@
   }
 }
 
-/* Soft film grain — gives the page a paper/analog feel, no boxes needed */
+/* Soft film grain — gives the page a paper/analog feel */
 @utility grain {
   position: relative;
   &::after {
@@ -195,7 +196,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.05;
+    opacity: 0.045;
     mix-blend-mode: overlay;
     background-image: radial-gradient(oklch(1 0 0 / 60%) 0.5px, transparent 0.5px);
     background-size: 3px 3px;
@@ -209,6 +210,36 @@
   box-shadow: var(--shadow-warm);
 }
 
+/* Glossy obsidian card with a hairline gold rim */
+@utility glass-card {
+  position: relative;
+  background:
+    linear-gradient(160deg, oklch(1 0 0 / 5%) 0%, transparent 42%),
+    oklch(0.1 0.018 26 / 55%);
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid oklch(0.766 0.126 87 / 12%);
+  box-shadow:
+    0 24px 70px -40px oklch(0 0 0 / 85%),
+    inset 0 1px 0 oklch(1 0 0 / 6%);
+  transition:
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  &:hover {
+    border-color: oklch(0.766 0.126 87 / 32%);
+    box-shadow:
+      0 30px 90px -40px oklch(0 0 0 / 90%),
+      0 0 44px -18px oklch(0.766 0.126 87 / 40%),
+      inset 0 1px 0 oklch(1 0 0 / 8%);
+  }
+}
+
+@utility glow-gold {
+  box-shadow:
+    0 0 0 1px oklch(0.766 0.126 87 / 30%),
+    0 10px 40px -14px oklch(0.766 0.126 87 / 45%);
+}
+
 @utility text-gradient-warm {
   background-image: var(--gradient-warm);
   background-clip: text;
@@ -216,7 +247,6 @@
   color: transparent;
 }
 
-/* legacy alias so older markup keeps working */
 @utility text-gradient-gold {
   background-image: var(--gradient-warm);
   background-clip: text;
@@ -224,20 +254,19 @@
   color: transparent;
 }
 
-/* Warm paper sheet — the only "surface" in the design */
+/* Warm paper sheet */
 @utility paper {
   background-color: var(--cream);
   background-image: radial-gradient(
       90% 60% at 0% 0%,
-      oklch(0.755 0.072 22 / 16%) 0%,
+      oklch(0.755 0.072 22 / 14%) 0%,
       transparent 60%
     ),
-    radial-gradient(80% 70% at 100% 100%, oklch(0.735 0.098 79 / 18%) 0%, transparent 60%);
+    radial-gradient(80% 70% at 100% 100%, oklch(0.766 0.126 87 / 18%) 0%, transparent 60%);
   color: var(--ink);
   box-shadow: var(--shadow-warm), var(--shadow-lamp);
 }
 
-/* Hand-drawn ink underline used instead of bordered inputs */
 @utility ink-line {
   border: 0;
   border-radius: 0;
@@ -262,6 +291,11 @@
     color-mix(in oklab, var(--gold) 55%, transparent),
     transparent
   );
+}
+
+/* Edge fade for the marquee strip */
+@utility edge-fade {
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
 }
 
 @keyframes float-slow {
@@ -324,4 +358,23 @@
 
 @utility animate-shimmer-line {
   animation: shimmer-line 4.5s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@utility animate-pulse-ring {
+  animation: pulse-ring 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }

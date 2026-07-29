@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LifeBuoy, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,22 +16,23 @@ export function HelpModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button
-          type="button"
-          className="group inline-flex items-center gap-2 rounded-full bg-ember/15 px-4 py-2 text-sm text-rose transition-colors duration-300 hover:bg-ember/25 hover:text-cream"
+        <Button
+          variant="outline"
+          size="sm"
+          className="group rounded-full border-primary/30 bg-primary/10 text-primary transition-all duration-500 hover:bg-primary/20 hover:text-cream"
         >
           <LifeBuoy className="size-4 transition-transform duration-500 group-hover:rotate-45" />
           <span className="hidden sm:inline">In Distress?</span> Get Help
-        </button>
+        </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg">
+      <DialogContent className="glass-panel max-w-lg rounded-3xl">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl text-primary">
+          <DialogTitle className="font-display text-2xl text-gradient-warm">
             You are not alone. Help is one call away.
           </DialogTitle>
           <DialogDescription>
-            Dil Ki Baat is a peer-support space, not a crisis or medical service. If you are
+            Dil Ki Baat is a peer support space, not a crisis or medical service. If you are
             thinking of harming yourself or someone else, please reach a trained professional right
             now.
           </DialogDescription>
@@ -41,9 +43,9 @@ export function HelpModal() {
             <a
               key={h.number}
               href={`tel:${h.tel}`}
-              className="flex items-start gap-3 rounded-xl border border-border bg-card/60 p-4 transition-colors hover:bg-accent"
+              className="glass-card flex items-start gap-3 rounded-2xl p-4"
             >
-              <Phone className="mt-1 size-5 text-primary" />
+              <Phone className="mt-1 size-5 shrink-0 text-primary" />
               <span>
                 <span className="block font-display text-lg text-primary">{h.number}</span>
                 <span className="block text-sm font-medium text-foreground">{h.name}</span>
