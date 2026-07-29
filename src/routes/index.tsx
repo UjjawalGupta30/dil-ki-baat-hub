@@ -85,13 +85,20 @@ function Index() {
           </motion.p>
 
           <h1 className="max-w-4xl font-display text-[clamp(2.6rem,8.5vw,6rem)] font-normal leading-[1.02]">
-            <RevealWords text="Dil se sunenge," className="block text-gradient-warm" />
+            <RevealWords
+              text="Dil se sunenge,"
+              className="block"
+              wordClassName="text-gradient-warm"
+              onMount
+            />
             <RevealWords
               text="samajh se bolenge."
               className="block italic text-cream/90"
               delay={0.22}
+              onMount
             />
           </h1>
+
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
