@@ -156,9 +156,9 @@ export function ConfessionWizard({
   };
 
   return (
-    <div className="portal-shell overflow-hidden p-6 sm:p-12">
+    <div className="portal-shell overflow-hidden p-5 sm:p-8">
       {/* progress */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.62rem] uppercase tracking-[0.28em]">
           {STEP_LABELS.map((l, i) => (
             <button
@@ -177,7 +177,7 @@ export function ConfessionWizard({
             </button>
           ))}
         </div>
-        <div className="mt-4 h-px w-full bg-border">
+        <div className="mt-3 h-px w-full bg-border">
           <div
             className="h-px bg-gradient-to-r from-primary to-accent transition-all duration-700 ease-out"
             style={{ width: `${((step + 1) / 4) * 100}%` }}
@@ -185,7 +185,7 @@ export function ConfessionWizard({
         </div>
       </div>
 
-      <div ref={paneRef} className="min-h-[22rem]">
+      <div ref={paneRef} className="min-h-[15rem]">
         {step === 0 && (
           <div className="space-y-5">
             <div>
@@ -200,7 +200,7 @@ export function ConfessionWizard({
             <Textarea
               value={content}
               maxLength={5000}
-              rows={8}
+              rows={5}
               onChange={(e) => setContent(e.target.value)}
               placeholder="The thing you have not said out loud yet…"
               className="resize-y rounded-[2rem] border-0 bg-background/25 text-base leading-relaxed shadow-[inset_0_0_0_1px_oklch(0.82_0.168_78/18%)] transition-shadow duration-500 focus-visible:shadow-[inset_0_0_0_1px_oklch(0.82_0.168_78/60%),0_0_60px_-24px_oklch(0.82_0.168_78/90%)] focus-visible:ring-0"
@@ -215,7 +215,7 @@ export function ConfessionWizard({
         )}
 
         {step === 1 && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
               <h3 className="font-display text-[clamp(1.6rem,4vw,2.2rem)] leading-tight text-cream">
                 What is this really about?
@@ -271,7 +271,7 @@ export function ConfessionWizard({
         )}
 
         {step === 2 && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
               <h3 className="font-display text-[clamp(1.6rem,4vw,2.2rem)] leading-tight text-cream">
                 How are you feeling right now?
@@ -356,7 +356,7 @@ export function ConfessionWizard({
         )}
 
         {step === 3 && (
-          <div className="space-y-7">
+          <div className="space-y-6">
             <div>
               <h3 className="font-display text-[clamp(1.6rem,4vw,2.2rem)] leading-tight text-cream">
                 Want to talk it through, live?
@@ -411,7 +411,7 @@ export function ConfessionWizard({
         )}
       </div>
 
-      <div className="mt-10 flex items-center justify-between gap-4 border-t border-border pt-6">
+      <div className="mt-7 flex items-center justify-between gap-4 border-t border-border pt-5">
         <Button
           type="button"
           variant="ghost"

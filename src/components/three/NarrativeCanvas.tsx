@@ -314,7 +314,7 @@ function Cloud() {
 
     // On wide screens the cloud slides right so the type column stays clean.
     // Around the portal act it recentres, because the form sits over it.
-    const wide = state.size.width / state.size.height > 1.15;
+    const wide = state.size.width > 900;
     const centred = smoothstep(0.58, 0.66, p) * (1 - smoothstep(0.74, 0.82, p));
     const offset = wide ? 2.9 * (1 - centred) : 0;
     el.position.x += (offset - el.position.x) * (1 - Math.exp(-2 * dt));
