@@ -81,7 +81,7 @@ function Core() {
       );
 
       seeds.push(Math.random() * Math.PI * 2);
-      scales.push(0.055 + Math.random() * 0.085);
+      scales.push(0.026 + Math.random() * 0.05);
     }
     return { closed, open, ring, seeds, scales };
   }, []);
@@ -165,9 +165,12 @@ function Core() {
         <meshStandardMaterial
           color={GOLD}
           emissive={SUNSET}
-          emissiveIntensity={0.55}
+          emissiveIntensity={0.4}
           metalness={1}
-          roughness={0.22}
+          roughness={0.18}
+          transparent
+          opacity={0.72}
+          depthWrite={false}
         />
       </instancedMesh>
 
