@@ -21,6 +21,8 @@ export function CoreCanvas() {
       </ClientOnly>
       {/* depth of field: the scene softens toward the page edges */}
       <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_45%,transparent_0%,var(--core-veil)_100%)]" />
+      {/* a breath of shade so typography always stays legible over the core */}
+      <div className="absolute inset-0 bg-[radial-gradient(42%_30%_at_50%_45%,oklch(0.11_0.026_24/58%)_0%,transparent_72%)]" />
     </div>
   );
 }
