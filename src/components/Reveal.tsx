@@ -59,14 +59,17 @@ export function RevealWords({
   className,
   wordClassName,
   delay = 0,
+  onMount = false,
 }: {
   text: string;
   className?: string;
   wordClassName?: string;
   delay?: number;
+  onMount?: boolean;
 }) {
   const reduced = useReducedMotion();
   const words = text.split(" ");
+  const shown = { y: 0, opacity: 1 };
 
   return (
     <span className={className}>
@@ -75,7 +78,7 @@ export function RevealWords({
           <motion.span
             className={`inline-block ${wordClassName ?? ""}`}
             initial={{ y: reduced ? 0 : "108%", opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
+            {...(onMount ? { animate: shown } : { whileInView: shown })}
             viewport={{ once: true, amount: 0.4 }}
             transition={{
               duration: 0.95,
@@ -91,3 +94,4 @@ export function RevealWords({
     </span>
   );
 }
+
