@@ -47,8 +47,8 @@ export function StoryOverlay({
         const start = (act.id - 1) * ACT_SPAN;
         const end = act.id * ACT_SPAN;
         const a =
-          smoothstep(start - 0.004, start + 0.022, p) *
-          (1 - smoothstep(end - 0.022, end + 0.004, p));
+          smoothstep(start + 0.004, start + 0.026, p) *
+          (1 - smoothstep(end - 0.03, end - 0.008, p));
         const el = layers.current[index];
         if (el) {
           const local = actLocal(p, act.id);
