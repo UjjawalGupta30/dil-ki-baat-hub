@@ -90,6 +90,7 @@ export async function enableAudio() {
 /** Fade the bed out and suspend the context (keeps nodes for a fast restart). */
 export function disableAudio() {
   enabled = false;
+  stopVoice();
   if (ctx && master) {
     master.gain.cancelScheduledValues(ctx.currentTime);
     master.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.25);
@@ -312,6 +313,7 @@ export function playHeartbeat() {
  * chapter of the story the eye is looking at.
  */
 export function playActCue(act: number) {
+  speakAct(act);
   switch (act) {
     case 2:
       playHeartbeat();
@@ -341,4 +343,45 @@ export function playActCue(act: number) {
     default:
       playWhoosh(false);
   }
+}
+
+
+/* ------------------------------------------------------------------ *
+ * Voiceover. Rendered with the browser's own speech engine so the
+ * narration ships with zero network audio and always matches the act.
+ * ------------------------------------------------------------------ */
+
+export const VOICE_LINES: Record<number, string> = {
+  1: "We live in the most connected time in human history, yet millions of us feel isolated.",
+  2: "Loneliness is a biological warning, just like hunger.",
+  3: "We traded tribes for cities and screens, and ended up overthinking alone at 2 A M.",
+  4: "Isolation creates a vicious loop. We overthink, assume the worst, and pull away.",
+  5: "The loop breaks the moment you say it out loud.",
+  6: "No names. No accounts. Write it exactly the way it sits in your chest.",
+  7: "Your truth gives someone else permission to speak.",
+  8: "A fire, and people around it. Stay as long as it helps.",
+};
+
+let lastSpoken = 0;
+
+/** Speak the act's narration line, if audio is on and TTS is available. */
+export function speakAct(act: number) {
+  if (!enabled || typeof window === "undefined") return;
+  const synth = window.speechSynthesis;
+  const line = VOICE_LINES[act];
+  if (!synth || !line || lastSpoken === act) return;
+  lastSpoken = act;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(line);
+  u.rate = 0.9;
+  u.pitch = 0.95;
+  u.volume = 0.85;
+  synth.speak(u);
+}
+
+/** Stop any narration in flight (used when the visitor mutes). */
+export function stopVoice() {
+  if (typeof window === "undefined") return;
+  window.speechSynthesis?.cancel();
+  lastSpoken = 0;
 }

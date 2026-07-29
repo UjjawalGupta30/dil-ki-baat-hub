@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { NarrativeStage } from "@/components/narrative/NarrativeStage";
+import { StoryOverlay } from "@/components/narrative/StoryOverlay";
 import { ColorBed } from "@/components/narrative/ColorBed";
-import { VectorScenes } from "@/components/narrative/VectorScenes";
+import { KurzgesagtCanvas } from "@/components/narrative/KurzgesagtCanvas";
 import { ChatSheet } from "@/components/ChatSheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { scrollState } from "@/lib/scroll-state";
@@ -61,14 +61,12 @@ function Index() {
 
       <ColorBed />
 
-      {/* the vector stage lives behind the pinned viewport for the whole story */}
-      <div id="narrative-canvas" aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
-        <VectorScenes />
-      </div>
+      {/* the full-screen vector canvas engine drives every act */}
+      <KurzgesagtCanvas />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(62%_50%_at_50%_46%,transparent_0%,rgb(0_0_0/58%)_100%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(70%_58%_at_50%_42%,transparent_0%,rgb(0_0_0/62%)_100%)]"
       />
 
 
@@ -76,7 +74,7 @@ function Index() {
 
       {/* the story section owns the scroll clock; the footer lives after it */}
       <section id="story" className="relative w-full">
-        <NarrativeStage room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
+        <StoryOverlay room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
         {/* the 800vh track that scrubs the eight acts */}
         <div aria-hidden="true" className="h-[800vh] w-full" />
       </section>
