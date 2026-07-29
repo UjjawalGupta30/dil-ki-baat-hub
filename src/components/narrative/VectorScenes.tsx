@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { scrollState } from "@/lib/scroll-state";
 import { ACTS, actAlpha, actLocal, clamp01, smoothstep, type ActId } from "@/lib/narrative";
+import { FIELD_COUNT, fieldTarget, mixColor } from "@/lib/field";
+
 
 /**
  * The vector stage.
@@ -46,11 +48,76 @@ export function VectorScenes() {
       speed: Number(el.dataset.speed ?? 1),
     }));
 
+    // ── the continuous field ──────────────────────────────────
+    const pts = Array.from(svg.querySelectorAll<SVGCircleElement>("[data-fp]"));
+    const links = Array.from(svg.querySelectorAll<SVGLineElement>("[data-fl]"));
+    const px = new Float32Array(FIELD_COUNT);
+    const py = new Float32Array(FIELD_COUNT);
+    {
+      const p0 = scrollState.progress;
+      const f0 = Math.max(0, Math.min(6.999, p0 * 8 - 0.5));
+      const i0 = Math.floor(f0);
+      const k0 = f0 - i0;
+      for (let i = 0; i < FIELD_COUNT; i++) {
+        const A = fieldTarget(i0, i, FIELD_COUNT);
+        const B = fieldTarget(i0 + 1, i, FIELD_COUNT);
+        px[i] = A.x + (B.x - A.x) * k0;
+        py[i] = A.y + (B.y - A.y) * k0;
+      }
+    }
+
     const start = performance.now();
 
     const tick = () => {
       const t = (performance.now() - start) / 1000;
       const p = scrollState.progress;
+
+      // field: one population re-targeted across the whole story
+      {
+        const f = Math.max(0, Math.min(6.999, p * 8 - 0.5));
+        const i0 = Math.floor(f);
+        const k = smoothstep(0, 1, f - i0);
+        const col = mixColor(i0, i0 + 1, k);
+        const fShift = window.innerWidth > 980 ? 150 : 0;
+        for (let i = 0; i < FIELD_COUNT; i++) {
+          const A = fieldTarget(i0, i, FIELD_COUNT);
+          const B = fieldTarget(i0 + 1, i, FIELD_COUNT);
+          const tx = A.x + (B.x - A.x) * k;
+          const ty = A.y + (B.y - A.y) * k;
+          const ease = 0.055 + (i % 7) * 0.006;
+          px[i] += (tx - px[i]) * ease;
+          py[i] += (ty - py[i]) * ease;
+          const wob = Math.sin(t * (0.5 + (i % 5) * 0.13) + i) * 5;
+          const el = pts[i];
+          if (!el) continue;
+          el.setAttribute("cx", (px[i] + wob + fShift + scrollState.px * 26).toFixed(1));
+          el.setAttribute(
+            "cy",
+            (py[i] + Math.cos(t * 0.4 + i) * 4 + scrollState.py * -16).toFixed(1),
+          );
+          el.setAttribute("fill", col);
+        }
+        for (let j = 0; j < links.length; j++) {
+          const a = (j * 9) % FIELD_COUNT;
+          const b = (a + 7) % FIELD_COUNT;
+          const ea = pts[a];
+          const eb = pts[b];
+          const ln = links[j];
+          if (!ea || !eb) continue;
+          const x1 = +ea.getAttribute("cx")!;
+          const y1 = +ea.getAttribute("cy")!;
+          const x2 = +eb.getAttribute("cx")!;
+          const y2 = +eb.getAttribute("cy")!;
+          const d = Math.hypot(x2 - x1, y2 - y1);
+          ln.setAttribute("x1", x1.toFixed(1));
+          ln.setAttribute("y1", y1.toFixed(1));
+          ln.setAttribute("x2", x2.toFixed(1));
+          ln.setAttribute("y2", y2.toFixed(1));
+          ln.setAttribute("stroke", col);
+          ln.setAttribute("opacity", (Math.max(0, 1 - d / 210) * 0.32).toFixed(3));
+        }
+      }
+
       // on wide screens the scene slides clear of the type column on the left
       const shift = window.innerWidth > 980 ? 210 : 0;
 
@@ -66,12 +133,16 @@ export function VectorScenes() {
         }
         if (g.style.display === "none") g.style.display = "";
         g.style.opacity = a.toFixed(3);
-        const s = 0.88 + a * 0.14;
-        const drift = (local - 0.5) * 90;
-        g.style.transform = `translate(${(shift + scrollState.px * 18).toFixed(1)}px, ${(
-          drift +
-          scrollState.py * -12
-        ).toFixed(1)}px) scale(${s.toFixed(4)})`;
+        // enter from depth, leave upward — every in-between frame reads as motion
+        const e = smoothstep(0, 1, a);
+        const s = 0.8 + e * 0.22;
+        const drift = (local - 0.5) * 150;
+        const rot = (1 - e) * (i % 2 === 0 ? -3.4 : 3.4);
+        g.style.transform = `translate(${(shift + scrollState.px * 18 + (1 - e) * (i % 2 ? 70 : -70)).toFixed(
+          1,
+        )}px, ${(drift + scrollState.py * -12 + (1 - e) * 60).toFixed(
+          1,
+        )}px) scale(${s.toFixed(4)}) rotate(${rot.toFixed(2)}deg)`;
       });
 
       // per-element life
@@ -212,7 +283,33 @@ export function VectorScenes() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <linearGradient id="fieldFadeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.12" />
+          <stop offset="26%" stopColor="#fff" stopOpacity="0.28" />
+          <stop offset="52%" stopColor="#fff" stopOpacity="1" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="1" />
+        </linearGradient>
+        <mask id="fieldFade">
+          <rect x="0" y="0" width={W} height={H} fill="url(#fieldFadeGrad)" />
+        </mask>
       </defs>
+
+      {/* ─── the continuous field (never unmounts, morphs act to act) ─── */}
+      <g mask="url(#fieldFade)" style={{ mixBlendMode: "screen" }}>
+        {Array.from({ length: 30 }).map((_, i) => (
+          <line key={`l${i}`} data-fl="" strokeWidth="1" opacity="0" />
+        ))}
+        {Array.from({ length: FIELD_COUNT }).map((_, i) => (
+          <circle
+            key={`p${i}`}
+            data-fp=""
+            cx="720"
+            cy="450"
+            r={(1 + rnd(i + 300) * 2.4).toFixed(2)}
+            opacity={(0.35 + rnd(i + 400) * 0.5).toFixed(2)}
+          />
+        ))}
+      </g>
 
       {/* ─── ACT 1 · the connected void ─────────────────────────── */}
       <g ref={setScene(0)} data-scene="1" style={{ transformOrigin: "50% 50%" }}>
