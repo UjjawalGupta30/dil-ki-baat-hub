@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { scrollState } from "@/lib/scroll-state";
 import { ACTS, actAlpha, actLocal, clamp01, smoothstep, type ActId } from "@/lib/narrative";
+import { FIELD_COUNT, fieldTarget, mixColor } from "@/lib/field";
+
 
 /**
  * The vector stage.
