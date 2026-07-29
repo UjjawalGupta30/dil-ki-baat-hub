@@ -127,12 +127,12 @@ function Index() {
           </h2>
         </Rise>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {WHY_IT_WORKS.map((w, i) => (
             <Rise
               key={w.t}
               delay={i * 0.07}
-              className={i === 0 ? "sm:col-span-2 lg:col-span-2" : ""}
+              className={i === 0 || i === 3 ? "sm:col-span-2 lg:col-span-2" : ""}
             >
               <article className="glass-card h-full rounded-3xl p-7">
                 <p className="text-[0.6rem] uppercase tracking-[0.3em] text-primary/70">{w.k}</p>
