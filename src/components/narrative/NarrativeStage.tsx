@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { ArrowDown, MessageCircleHeart } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { scrollControls, scrollState } from "@/lib/scroll-state";
-import { ACTS, ACT_SPAN, actAlpha, actLocal, LOOP_CARDS, type ActId } from "@/lib/narrative";
+import { ACTS, ACT_SPAN, actAlpha, actLocal, type ActId } from "@/lib/narrative";
 import { ConfessionWizard } from "@/components/ConfessionWizard";
 import { Magnetic } from "@/components/Magnetic";
 import { Button } from "@/components/ui/button";
@@ -114,16 +114,6 @@ export function NarrativeStage({
         <ActLayer ref={setLayer(3)} act={ACTS[3]}>
           <Heading>Then the loop starts.</Heading>
           <Body>{ACTS[3].body}</Body>
-          <div className="mt-7 flex flex-wrap gap-2.5">
-            {LOOP_CARDS.map((line) => (
-              <span
-                key={line}
-                className="glass-card rounded-full px-4 py-2 text-xs text-cream/75 transition-colors duration-500 hover:text-cream sm:text-sm"
-              >
-                {line}
-              </span>
-            ))}
-          </div>
         </ActLayer>
 
         {/* ACT 5 — the unburdening */}

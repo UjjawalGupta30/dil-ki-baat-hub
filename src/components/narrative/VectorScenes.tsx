@@ -155,7 +155,7 @@ export function VectorScenes() {
           case "flyIn": {
             const local = clamp01((scrollState.progress - 0.75) / 0.125);
             const e = smoothstep(0, 1, local);
-            m.el.style.transform = `translate(${((1 - e) * 620 * m.amp).toFixed(1)}px, ${(
+            m.el.style.transform = `translate(${((1 - e) * 420 * m.amp).toFixed(1)}px, ${(
               Math.sin(t * 1.6 + ph) * 14 -
               (1 - e) * 90
             ).toFixed(1)}px)`;
@@ -375,6 +375,9 @@ export function VectorScenes() {
           const bh = 260 + rnd(i + 2) * 420;
           return (
             <g key={i}>
+              <clipPath id={`tower${i}`}>
+                <rect x={bx} y={H - bh} width={bw} height={bh} />
+              </clipPath>
               <rect x={bx} y={H - bh} width={bw} height={bh} fill="#0C0A10" opacity="0.9" />
               <rect
                 x={bx}
@@ -386,7 +389,7 @@ export function VectorScenes() {
                 strokeWidth="1"
                 opacity="0.35"
               />
-              <g clipPath="none">
+              <g clipPath={`url(#tower${i})`}>
                 {Array.from({ length: 9 }).map((__, j) => (
                   <g
                     key={j}
@@ -563,22 +566,22 @@ export function VectorScenes() {
       <g ref={setScene(6)} data-scene="7" style={{ transformOrigin: "50% 50%" }}>
         <rect
           x={W / 2 - 420}
-          y={438}
+          y={636}
           width="840"
           height="4"
           rx="2"
           fill="url(#beamGrad)"
           data-motion="beam"
-          style={{ transformOrigin: `${W / 2}px 440px` }}
+          style={{ transformOrigin: `${W / 2}px 638px` }}
           filter="url(#glow)"
         />
         {[
-          { x: 300, dir: 1, color: "#7FE3C0" },
-          { x: W - 300, dir: -1, color: "#FFE9A8" },
+          { x: 380, dir: 1, color: "#7FE3C0" },
+          { x: W - 250, dir: -1, color: "#FFE9A8" },
         ].map((b, i) => (
           <g
             key={i}
-            transform={`translate(${b.x} 420) scale(${b.dir} 1)`}
+            transform={`translate(${b.x} 620) scale(${b.dir} 1)`}
           >
             <g data-motion="flyIn" data-seed={i / 2} data-amp={b.dir}>
             <g filter="url(#glow)">
@@ -605,7 +608,7 @@ export function VectorScenes() {
           <circle
             key={i}
             cx={W / 2 + (rnd(i) - 0.5) * 760}
-            cy={440 + (rnd(i + 5) - 0.5) * 150}
+            cy={638 + (rnd(i + 5) - 0.5) * 150}
             r={1 + rnd(i + 9) * 2.4}
             fill="#FFE9A8"
             data-motion="float"
@@ -668,7 +671,7 @@ export function VectorScenes() {
               <g data-motion="float" data-seed={rnd(i + 20)} data-speed="0.35">
               <circle cx="0" cy="-58" r="24" fill="#2A1608" stroke="#FFB35C" strokeWidth="2" />
               <path
-                d="M -34 44 C -34 -14, 34 -14, 34 44 Z"
+                d="M -34 44 C -34 -32, 34 -32, 34 44 Z"
                 fill="#2A1608"
                 stroke="#FFB35C"
                 strokeWidth="2"
