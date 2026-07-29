@@ -131,8 +131,11 @@ export function ConfessionForm({
   return (
     <form onSubmit={submit} className="space-y-11 text-ink">
       <div className="space-y-3">
-        <Ask htmlFor="content" hint="A situation, a doubt, an emotion — anything.">
-          What&apos;s on your mind?
+        <Ask
+          htmlFor="content"
+          hint="There's no right way to start. A sentence is enough. So is a page."
+        >
+          What&apos;s sitting heavy today?
         </Ask>
         <textarea
           id="content"
@@ -140,10 +143,14 @@ export function ConfessionForm({
           onChange={(e) => setContent(e.target.value)}
           maxLength={5000}
           rows={6}
-          placeholder="Likh dijiye… jo dil mein hai."
+          placeholder="Start anywhere — even in the middle."
           className="ink-line w-full resize-y px-0 py-3 text-lg leading-relaxed text-ink placeholder:text-ink/35"
         />
+        <p className="text-xs text-ink/45">
+          Nobody sees your name, because we never ask for it.
+        </p>
       </div>
+
 
       <fieldset className="space-y-3">
         <legend className="font-display text-[1.35rem] italic text-ink">Is it related to…</legend>
