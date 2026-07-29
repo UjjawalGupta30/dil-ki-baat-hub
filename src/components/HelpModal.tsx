@@ -27,7 +27,7 @@ export function HelpModal() {
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-primary">
-            You are not alone — help is one call away
+            You are not alone. Help is one call away.
           </DialogTitle>
           <DialogDescription>
             Dil Ki Baat is a peer-support space, not a crisis or medical service. If you are
