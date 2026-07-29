@@ -3,6 +3,7 @@ import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { NarrativeStage } from "@/components/narrative/NarrativeStage";
+import { ColorBed } from "@/components/narrative/ColorBed";
 import { ChatSheet } from "@/components/ChatSheet";
 import { scrollState } from "@/lib/scroll-state";
 import { playRelease } from "@/lib/audio-engine";
@@ -57,14 +58,21 @@ function Index() {
     <div id="app-root" className="grain relative w-full">
       <SmoothScroll />
 
+      <ColorBed />
+
       {/* the vector canvas lives behind the pinned viewport for the whole story */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0">
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>
             <NarrativeCanvas />
           </Suspense>
         </ClientOnly>
       </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(58%_46%_at_50%_46%,transparent_0%,rgb(0_0_0/62%)_100%)]"
+      />
 
       <SiteHeader />
 

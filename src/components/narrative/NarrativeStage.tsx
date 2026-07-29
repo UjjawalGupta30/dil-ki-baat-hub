@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { ArrowDown, MessageCircleHeart } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { scrollControls, scrollState } from "@/lib/scroll-state";
-import { ACTS, ACT_SPAN, actAlpha, actLocal, backgroundAt, LOOP_CARDS, type ActId } from "@/lib/narrative";
+import { ACTS, ACT_SPAN, actAlpha, actLocal, LOOP_CARDS, type ActId } from "@/lib/narrative";
 import { ConfessionWizard } from "@/components/ConfessionWizard";
 import { Magnetic } from "@/components/Magnetic";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,6 @@ export function NarrativeStage({
   onReopenChat: () => void;
 }) {
   const layers = useRef<(HTMLDivElement | null)[]>([]);
-  const veil = useRef<HTMLDivElement>(null);
   const rail = useRef<(HTMLSpanElement | null)[]>([]);
   const caption = useRef<HTMLSpanElement>(null);
 
@@ -36,8 +35,6 @@ export function NarrativeStage({
 
     const tick = () => {
       const p = scrollState.progress;
-
-      if (veil.current) veil.current.style.backgroundColor = backgroundAt(p);
 
       ACTS.forEach((act, index) => {
         const el = layers.current[index];
@@ -81,20 +78,8 @@ export function NarrativeStage({
   return (
     <div
       id="pinned-viewport"
-      className="pointer-events-none sticky top-0 flex h-[100svh] w-full flex-col justify-between overflow-hidden p-5 sm:p-8 md:p-12"
+      className="pointer-events-none sticky top-0 z-10 flex h-[100svh] w-full flex-col justify-between overflow-hidden p-5 sm:p-8 md:p-12"
     >
-      {/* colour bed, re-tinted every frame */}
-      <div
-        ref={veil}
-        aria-hidden="true"
-        className="fixed inset-0 -z-20 transition-none"
-        style={{ backgroundColor: "rgb(11,14,23)" }}
-      />
-      <div
-        aria-hidden="true"
-        className="fixed inset-0 -z-10 bg-[radial-gradient(58%_46%_at_50%_46%,transparent_0%,rgb(0_0_0/58%)_100%)]"
-      />
-
       <div className="relative flex-1">
         {/* ACT 1 — the connected void */}
         <ActLayer ref={setLayer(0)} act={ACTS[0]}>
