@@ -22,7 +22,7 @@ const H = 900;
 /** Deterministic pseudo-random so SSR and the client agree. */
 function rnd(seed: number) {
   const x = Math.sin(seed * 127.1) * 43758.5453;
-  return x - Math.floor(x);
+  return Math.round((x - Math.floor(x)) * 1e4) / 1e4;
 }
 
 export function VectorScenes() {
