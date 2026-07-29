@@ -204,7 +204,7 @@ export function NarrativeStage({
       <div className="pointer-events-auto relative flex items-end justify-between gap-6">
         <span
           ref={caption}
-          className="text-[0.62rem] uppercase tracking-[0.3em] text-cream/45 sm:text-xs"
+          className="max-w-[38%] truncate text-[0.55rem] uppercase tracking-[0.28em] text-cream/45 sm:max-w-none sm:text-xs sm:tracking-[0.3em]"
         >
           {ACTS[0].label}
         </span>
@@ -221,7 +221,7 @@ export function NarrativeStage({
                 ref={(el) => {
                   rail.current[i] = el;
                 }}
-                className="block h-px w-6 origin-left bg-primary transition-colors duration-500 sm:w-9"
+                className="block h-px w-3.5 origin-left bg-primary transition-colors duration-500 sm:w-9"
               />
             </button>
           ))}
