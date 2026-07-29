@@ -65,9 +65,13 @@ export function ScrollWord({
           scaleX: lineScale,
           transformOrigin: align === "right" ? "right" : "left",
         }}
-        className="mt-6 h-px w-full max-w-md bg-gradient-to-r from-primary via-rose to-transparent sm:max-w-lg"
-        {...(align === "right" ? { "data-align": "right" } : {})}
+        className={`mt-6 h-px w-full max-w-md sm:max-w-lg ${
+          align === "right"
+            ? "ml-auto bg-gradient-to-l from-primary via-rose to-transparent"
+            : "bg-gradient-to-r from-primary via-rose to-transparent"
+        }`}
       />
+
 
       <motion.div
         style={{ y: textY, opacity }}
