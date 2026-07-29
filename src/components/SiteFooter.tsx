@@ -6,7 +6,7 @@ const INSTAGRAM = "https://instagram.com/dil.ki.baat.sabkesath";
 
 export function SiteFooter() {
   return (
-    <footer className="relative px-6 pb-16 pt-4 sm:px-10">
+    <footer className="relative z-20 bg-background px-6 pb-16 pt-16 shadow-[0_-60px_80px_-40px_rgb(0_0_0/90%)] sm:px-10">
       <div className="mx-auto max-w-5xl">
         <div className="hairline mb-12" />
 
