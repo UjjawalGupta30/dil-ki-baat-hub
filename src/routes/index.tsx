@@ -1,15 +1,14 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { ClientOnly } from "@tanstack/react-router";
+import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { StoryStage } from "@/components/StoryStage";
-import { AudioToggle } from "@/components/AudioToggle";
+import { NarrativeStage } from "@/components/narrative/NarrativeStage";
+import { ColorBed } from "@/components/narrative/ColorBed";
 import { ChatSheet } from "@/components/ChatSheet";
 import { scrollState } from "@/lib/scroll-state";
 import { playRelease } from "@/lib/audio-engine";
 
-const StoryEngine = lazy(() => import("@/components/three/StoryEngine"));
+const NarrativeCanvas = lazy(() => import("@/components/three/NarrativeCanvas"));
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,7 +17,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A scroll-driven, anonymous space to say the thing you never say. Write what is heavy, choose a disappearing live chat, and be heard without judgment.",
+          "An eight-chapter scroll journey through loneliness, and an anonymous place to put down what you carry. Write it, be read by a real person, chat and let it disappear.",
       },
       { property: "og:title", content: "Dil Ki Baat | Say It Anonymously and Be Heard Honestly" },
       {
@@ -38,8 +37,7 @@ function Index() {
   const [room, setRoom] = useState<Room | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
 
-  // ACT 5 — a confession bursts the portal into embers and the drone resolves
-  // into a warm triad while the sanctuary drawer opens.
+  // A released confession warms the whole scene and opens the sanctuary.
   useEffect(() => {
     scrollState.connected = !!room;
     if (room) {
@@ -57,27 +55,31 @@ function Index() {
   }, [room]);
 
   return (
-    <div className="grain relative">
+    <div id="app-root" className="grain relative w-full">
       <SmoothScroll />
 
-      {/* pinned WebGL viewport */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+      <ColorBed />
+
+      {/* the vector canvas lives behind the pinned viewport for the whole story */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0">
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>
-            <StoryEngine />
+            <NarrativeCanvas />
           </Suspense>
         </ClientOnly>
-        <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_45%,transparent_0%,var(--core-veil)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(42%_30%_at_50%_45%,oklch(0.11_0.026_24/58%)_0%,transparent_72%)]" />
       </div>
 
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(58%_46%_at_50%_46%,transparent_0%,rgb(0_0_0/62%)_100%)]"
+      />
+
       <SiteHeader />
-      <AudioToggle />
 
-      <StoryStage room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
+      <NarrativeStage room={room} onStartChat={setRoom} onReopenChat={() => setChatOpen(true)} />
 
-      {/* virtual scroll track that scrubs the five acts */}
-      <div aria-hidden="true" className="h-[500vh] w-full" />
+      {/* the 800vh track that scrubs the eight acts */}
+      <div aria-hidden="true" className="h-[800vh] w-full" />
 
       {room && (
         <ChatSheet

@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { scrollControls, scrollState } from "@/lib/scroll-state";
-import { MILESTONES } from "@/lib/story";
-import { playClick, playShatter, setScrollProgress } from "@/lib/audio-engine";
+import { ACT_COUNT, ACT_SPAN } from "@/lib/narrative";
+import { playActCue, setScrollProgress } from "@/lib/audio-engine";
 
 /**
  * Silk scroll physics and the master clock of the whole story. Lenis drives
@@ -20,16 +20,18 @@ export function SmoothScroll() {
       scrollState.velocity = gsap.utils.clamp(-1, 1, velocity / 40);
       setScrollProgress(progress);
 
-      MILESTONES.forEach((m, i) => {
-        if (progress >= m && !fired.has(i)) {
-          fired.add(i);
-          if (i === 0) playShatter();
-          else playClick(1 - i * 0.15);
-        } else if (progress < m - 0.03) {
-          fired.delete(i);
+      // one signature sound per act threshold, re-armable when scrolling back
+      for (let act = 2; act <= ACT_COUNT; act++) {
+        const edge = (act - 1) * ACT_SPAN;
+        if (progress >= edge && !fired.has(act)) {
+          fired.add(act);
+          playActCue(act);
+        } else if (progress < edge - 0.015) {
+          fired.delete(act);
         }
-      });
+      }
     };
+
 
     // Reduced motion: no smoothing, but the story still needs its clock.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
