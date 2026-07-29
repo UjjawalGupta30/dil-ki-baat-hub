@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/accordion";
 import { FAQS, WHISPERS, WHY_IT_WORKS } from "@/lib/dilkibaat";
 import { scrollState } from "@/lib/scroll-state";
+import { AudioToggle } from "@/components/AudioToggle";
+import { playRelease } from "@/lib/audio-engine";
 
 export const Route = createFileRoute("/")({
   head: () => ({
