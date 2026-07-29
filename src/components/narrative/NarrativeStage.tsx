@@ -87,7 +87,7 @@ export function NarrativeStage({
       <div
         ref={veil}
         aria-hidden="true"
-        className="absolute inset-0 -z-10 transition-none"
+        className="fixed inset-0 -z-20 transition-none"
         style={{ backgroundColor: "rgb(11,14,23)" }}
       />
       <div
@@ -164,7 +164,7 @@ export function NarrativeStage({
 
         {/* ACT 6 — the venting portal */}
         <ActLayer ref={setLayer(5)} act={ACTS[5]} wide>
-          <div className="w-full max-w-3xl">
+          <div className="mx-auto w-full max-w-2xl text-left">
             <Heading small>Release it to the void.</Heading>
             <p className="mt-3 max-w-xl text-sm text-cream/65 sm:text-base">{ACTS[5].body}</p>
             <div className="mt-6 max-h-[54svh] overflow-y-auto pr-1">
