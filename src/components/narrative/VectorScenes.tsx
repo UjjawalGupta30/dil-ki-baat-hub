@@ -547,8 +547,8 @@ export function VectorScenes() {
                 data-motion="gather"
                 data-seed={rnd(i + 60)}
                 data-amp={rnd(i + 61)}
-                cx={Math.cos(a) * 330}
-                cy={Math.sin(a) * 250}
+                cx={+(Math.cos(a) * 330).toFixed(2)}
+                cy={+(Math.sin(a) * 250).toFixed(2)}
                 r={1.2 + rnd(i + 62) * 2.2}
                 fill={i % 4 === 0 ? "#D8A6F0" : "#E2C382"}
                 opacity="0.85"
