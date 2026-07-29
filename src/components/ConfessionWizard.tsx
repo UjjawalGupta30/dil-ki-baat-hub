@@ -156,7 +156,7 @@ export function ConfessionWizard({
   };
 
   return (
-    <div className="glass-card overflow-hidden rounded-[1.75rem] p-6 sm:p-10">
+    <div className="portal-shell overflow-hidden p-6 sm:p-12">
       {/* progress */}
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.62rem] uppercase tracking-[0.28em]">
@@ -203,7 +203,7 @@ export function ConfessionWizard({
               rows={8}
               onChange={(e) => setContent(e.target.value)}
               placeholder="The thing you have not said out loud yet…"
-              className="resize-y rounded-2xl border-border bg-background/40 text-base leading-relaxed focus-visible:ring-primary/40"
+              className="resize-y rounded-[2rem] border-0 bg-background/25 text-base leading-relaxed shadow-[inset_0_0_0_1px_oklch(0.82_0.168_78/18%)] transition-shadow duration-500 focus-visible:shadow-[inset_0_0_0_1px_oklch(0.82_0.168_78/60%),0_0_60px_-24px_oklch(0.82_0.168_78/90%)] focus-visible:ring-0"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>Take your time.</span>
@@ -234,11 +234,9 @@ export function ConfessionWizard({
                       aria-pressed={on}
                       onClick={() => toggleCategory(c)}
                       onKeyDown={(e) => e.key === "Enter" && toggleCategory(c)}
-                      variant={on ? "default" : "outline"}
-                      className={`cursor-pointer rounded-full px-4 py-1.5 text-[0.8rem] font-normal transition-all duration-400 ${
-                        on
-                          ? "glow-gold bg-primary text-primary-foreground"
-                          : "border-border text-muted-foreground hover:border-primary/40 hover:text-cream"
+                      variant="outline"
+                      className={`orb cursor-pointer border-0 bg-transparent px-5 py-2 text-[0.8rem] font-normal ${
+                        on ? "orb-on" : "text-muted-foreground hover:text-cream"
                       }`}
                     >
                       {c}

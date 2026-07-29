@@ -43,9 +43,9 @@ export function ThoughtsMarquee() {
           {items.map((t, i) => (
             <article
               key={`${t}-${i}`}
-              className="glass-card flex w-[19rem] shrink-0 items-center rounded-2xl px-6 py-5 sm:w-[24rem]"
+              className="flex w-[19rem] shrink-0 items-center px-6 py-5 sm:w-[24rem]"
             >
-              <p className="font-display text-[1.05rem] italic leading-snug text-cream/85 sm:text-[1.18rem]">
+              <p className="font-display text-[1.05rem] italic leading-snug text-cream/55 transition-colors duration-500 hover:text-cream sm:text-[1.18rem]">
                 “{t}”
               </p>
             </article>

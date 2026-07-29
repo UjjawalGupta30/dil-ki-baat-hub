@@ -378,3 +378,130 @@
 @utility animate-pulse-ring {
   animation: pulse-ring 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
+
+/* ── cinematic core layer ───────────────────────────────────
+   Light instead of containers: radial auras, organic cutouts,
+   halos. No rectangles, no hard borders.
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* luminous electric amber + sunset gold + aura magenta */
+  --amber: oklch(0.82 0.168 78);
+  --sunset: oklch(0.755 0.099 52);
+  --aura: oklch(0.47 0.196 320);
+  --core-veil: oklch(0.11 0.026 24 / 82%);
+}
+
+/* soft radial pool of light standing in for a card */
+@utility aura-field {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -18% -12%;
+    pointer-events: none;
+    z-index: -1;
+    background:
+      radial-gradient(58% 52% at 30% 30%, oklch(0.82 0.168 78 / 12%) 0%, transparent 70%),
+      radial-gradient(62% 58% at 78% 74%, oklch(0.47 0.196 320 / 12%) 0%, transparent 72%);
+    filter: blur(14px);
+  }
+}
+
+/* an organic glass cutout — blobby, never a box */
+@utility organic-glass {
+  position: relative;
+  border-radius: 46% 54% 40% 60% / 44% 38% 62% 56%;
+  background:
+    radial-gradient(75% 60% at 24% 12%, oklch(1 0 0 / 6%) 0%, transparent 62%),
+    oklch(0.12 0.024 24 / 46%);
+  backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    0 0 90px -30px oklch(0.82 0.168 78 / 40%),
+    inset 0 1px 0 oklch(1 0 0 / 7%);
+  transition: border-radius 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* liquid-metal edged portal used by the venting form */
+@utility portal-shell {
+  position: relative;
+  border-radius: 2.75rem;
+  background:
+    radial-gradient(80% 60% at 50% -8%, oklch(0.82 0.168 78 / 10%) 0%, transparent 62%),
+    oklch(0.1 0.02 24 / 52%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow:
+    0 60px 140px -60px oklch(0 0 0 / 90%),
+    0 0 120px -50px oklch(0.82 0.168 78 / 55%);
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from 180deg,
+      transparent 0%,
+      oklch(0.82 0.168 78 / 70%) 18%,
+      transparent 38%,
+      oklch(0.47 0.196 320 / 55%) 58%,
+      transparent 78%,
+      oklch(0.82 0.168 78 / 60%) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: portal-spin 16s linear infinite;
+  }
+}
+
+@keyframes portal-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* glowing pill CTA, lit rather than boxed */
+@utility halo-pill {
+  position: relative;
+  background: radial-gradient(120% 160% at 50% 120%, oklch(0.82 0.168 78 / 32%), transparent 70%);
+  box-shadow:
+    0 0 0 1px oklch(0.82 0.168 78 / 35%),
+    0 24px 70px -30px oklch(0.82 0.168 78 / 70%);
+  transition:
+    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s ease;
+  &:hover {
+    box-shadow:
+      0 0 0 1px oklch(0.82 0.168 78 / 65%),
+      0 30px 90px -26px oklch(0.82 0.168 78 / 90%);
+  }
+}
+
+/* floating orb toggle for category selection */
+@utility orb {
+  position: relative;
+  border-radius: 999px;
+  background: radial-gradient(120% 140% at 30% 20%, oklch(1 0 0 / 8%), transparent 65%);
+  box-shadow: inset 0 0 0 1px oklch(0.82 0.168 78 / 20%);
+  transition:
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.4s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 0 0 1px oklch(0.82 0.168 78 / 55%),
+      0 16px 44px -20px oklch(0.82 0.168 78 / 70%);
+  }
+}
+
+@utility orb-on {
+  color: var(--cream);
+  box-shadow:
+    inset 0 0 0 1px oklch(0.82 0.168 78 / 85%),
+    0 0 46px -12px oklch(0.82 0.168 78 / 85%);
+}
