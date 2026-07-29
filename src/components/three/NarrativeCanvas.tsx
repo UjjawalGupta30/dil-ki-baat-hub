@@ -313,8 +313,8 @@ function Cloud() {
     el.rotation.z = anxiety * Math.sin(time * 0.9) * 0.06;
 
     const mat = el.material as THREE.PointsMaterial;
-    mat.size = 0.032 + fire * 0.028 + anxiety * 0.01;
-    mat.opacity = 0.62 + smoothstep(0.4, 0.62, p) * 0.28;
+    mat.size = 0.046 + fire * 0.03 + anxiety * 0.012;
+    mat.opacity = 0.72 + smoothstep(0.4, 0.62, p) * 0.24;
   });
 
   return (
@@ -364,7 +364,6 @@ export default function NarrativeCanvas() {
     >
       <Rig />
       <Cloud />
-      <mesh><boxGeometry args={[3,3,3]} /><meshBasicMaterial color="red" /></mesh>
     </Canvas>
   );
 }
