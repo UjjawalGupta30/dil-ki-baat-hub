@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { LifeBuoy, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
