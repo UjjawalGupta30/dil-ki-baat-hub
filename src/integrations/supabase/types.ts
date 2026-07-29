@@ -126,6 +126,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_room_messages: {
+        Args: { _room_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          message: string
+          sender_type: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
