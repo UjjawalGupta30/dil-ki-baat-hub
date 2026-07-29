@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { LifeBuoy, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,11 +15,15 @@ export function HelpModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="sm" className="gap-2">
-          <LifeBuoy className="size-4" />
-          In Distress? Get Help
-        </Button>
+        <button
+          type="button"
+          className="group inline-flex items-center gap-2 rounded-full bg-ember/15 px-4 py-2 text-sm text-rose transition-colors duration-300 hover:bg-ember/25 hover:text-cream"
+        >
+          <LifeBuoy className="size-4 transition-transform duration-500 group-hover:rotate-45" />
+          <span className="hidden sm:inline">In Distress?</span> Get Help
+        </button>
       </DialogTrigger>
+
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-primary">

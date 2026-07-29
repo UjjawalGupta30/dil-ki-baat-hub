@@ -5,8 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Dil Ki Baat design system — deep vintage burgundy, warm gold, muted cream.
- * All colors are oklch semantic tokens. Never hardcode colors in components.
+ * Dil Ki Baat design system — a warm, hand-made palette:
+ * wine-black base fused with plum, terracotta ember, dusty rose,
+ * muted antique gold (never shiny yellow) and warm paper cream.
+ * All colors are semantic oklch tokens. Never hardcode colors in components.
  */
 
 @theme inline {
@@ -39,6 +41,9 @@
   --color-ring-offset-background: var(--background);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
+  --color-rose: var(--rose);
+  --color-ember: var(--ember);
+  --color-plum: var(--plum);
   --color-cream: var(--cream);
   --color-ink: var(--ink);
   --color-chart-1: var(--chart-1);
@@ -54,73 +59,85 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lora", ui-serif, Georgia, serif;
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.9rem;
 
-  /* #3B0D0B deep vintage burgundy */
-  --background: oklch(0.222 0.072 26.5);
-  --foreground: oklch(0.945 0.017 78);
+  /* wine-black */
+  --background: oklch(0.185 0.052 12);
+  --foreground: oklch(0.945 0.016 74);
 
-  --card: oklch(0.268 0.074 26.5);
-  --card-foreground: oklch(0.955 0.014 78);
-  --popover: oklch(0.255 0.072 26.5);
-  --popover-foreground: oklch(0.955 0.014 78);
+  --card: oklch(0.245 0.058 5);
+  --card-foreground: oklch(0.952 0.014 74);
+  --popover: oklch(0.235 0.058 5);
+  --popover-foreground: oklch(0.952 0.014 74);
 
-  /* #D4AF37 warm gold */
-  --primary: oklch(0.769 0.129 88.3);
-  --primary-foreground: oklch(0.205 0.07 26.5);
+  /* muted antique gold — warm, not shiny */
+  --primary: oklch(0.735 0.098 79);
+  --primary-foreground: oklch(0.19 0.05 12);
 
-  --secondary: oklch(0.32 0.075 26.5);
-  --secondary-foreground: oklch(0.945 0.017 78);
+  --secondary: oklch(0.33 0.075 350);
+  --secondary-foreground: oklch(0.945 0.016 74);
 
-  --muted: oklch(0.305 0.058 26.5);
-  --muted-foreground: oklch(0.775 0.038 70);
+  --muted: oklch(0.295 0.05 8);
+  --muted-foreground: oklch(0.795 0.036 46);
 
-  --accent: oklch(0.36 0.09 30);
-  --accent-foreground: oklch(0.93 0.05 88);
+  /* dusty rose accent */
+  --accent: oklch(0.72 0.072 20);
+  --accent-foreground: oklch(0.19 0.05 12);
 
-  --destructive: oklch(0.62 0.2 25);
+  --destructive: oklch(0.6 0.19 25);
   --destructive-foreground: oklch(0.97 0.01 78);
 
-  --border: oklch(0.769 0.129 88.3 / 22%);
-  --input: oklch(0.769 0.129 88.3 / 26%);
-  --ring: oklch(0.769 0.129 88.3 / 60%);
+  --border: oklch(0.735 0.098 79 / 18%);
+  --input: oklch(0.735 0.098 79 / 24%);
+  --ring: oklch(0.735 0.098 79 / 55%);
 
   /* Brand extras */
-  --gold: oklch(0.769 0.129 88.3);
-  --gold-soft: oklch(0.86 0.078 88);
-  /* #F7F4EF muted warm cream */
-  --cream: oklch(0.965 0.008 82);
-  --ink: oklch(0.26 0.03 40);
+  --gold: oklch(0.735 0.098 79);
+  --gold-soft: oklch(0.85 0.06 82);
+  --rose: oklch(0.755 0.072 22);
+  --ember: oklch(0.655 0.132 42);
+  --plum: oklch(0.415 0.108 342);
+  --cream: oklch(0.955 0.014 82);
+  --ink: oklch(0.255 0.045 20);
 
-  --chart-1: oklch(0.769 0.129 88.3);
-  --chart-2: oklch(0.66 0.14 45);
-  --chart-3: oklch(0.72 0.09 120);
-  --chart-4: oklch(0.68 0.12 300);
-  --chart-5: oklch(0.7 0.13 200);
+  --chart-1: oklch(0.735 0.098 79);
+  --chart-2: oklch(0.655 0.132 42);
+  --chart-3: oklch(0.755 0.072 22);
+  --chart-4: oklch(0.545 0.118 342);
+  --chart-5: oklch(0.68 0.09 200);
 
-  --sidebar: oklch(0.25 0.072 26.5);
-  --sidebar-foreground: oklch(0.945 0.017 78);
-  --sidebar-primary: oklch(0.769 0.129 88.3);
-  --sidebar-primary-foreground: oklch(0.205 0.07 26.5);
-  --sidebar-accent: oklch(0.33 0.08 28);
-  --sidebar-accent-foreground: oklch(0.945 0.017 78);
-  --sidebar-border: oklch(0.769 0.129 88.3 / 20%);
-  --sidebar-ring: oklch(0.769 0.129 88.3 / 50%);
+  --sidebar: oklch(0.225 0.055 8);
+  --sidebar-foreground: oklch(0.945 0.016 74);
+  --sidebar-primary: oklch(0.735 0.098 79);
+  --sidebar-primary-foreground: oklch(0.19 0.05 12);
+  --sidebar-accent: oklch(0.32 0.075 350);
+  --sidebar-accent-foreground: oklch(0.945 0.016 74);
+  --sidebar-border: oklch(0.735 0.098 79 / 18%);
+  --sidebar-ring: oklch(0.735 0.098 79 / 45%);
 
-  --gradient-ember: radial-gradient(
-    ellipse at 50% 0%,
-    oklch(0.34 0.1 28) 0%,
-    oklch(0.222 0.072 26.5) 60%
+  --gradient-dusk: radial-gradient(
+      120% 80% at 78% 6%,
+      oklch(0.36 0.1 342 / 70%) 0%,
+      transparent 62%
+    ),
+    radial-gradient(100% 70% at 6% 22%, oklch(0.38 0.11 32 / 52%) 0%, transparent 60%),
+    radial-gradient(120% 90% at 50% 108%, oklch(0.3 0.08 350 / 65%) 0%, transparent 65%),
+    linear-gradient(180deg, oklch(0.185 0.052 12) 0%, oklch(0.16 0.045 8) 100%);
+  --gradient-warm: linear-gradient(
+    104deg,
+    var(--gold-soft) 0%,
+    var(--rose) 34%,
+    var(--ember) 66%,
+    var(--gold) 100%
   );
-  --gradient-gold: linear-gradient(120deg, var(--gold-soft), var(--gold) 45%, oklch(0.62 0.1 70) 100%);
-  --shadow-warm: 0 24px 60px -24px oklch(0 0 0 / 65%);
-  --shadow-gold: 0 0 0 1px oklch(0.769 0.129 88.3 / 25%), 0 18px 50px -22px oklch(0.769 0.129 88.3 / 45%);
-  --glass: oklch(0.35 0.08 28 / 38%);
+  --shadow-warm: 0 34px 90px -40px oklch(0 0 0 / 72%);
+  --shadow-lamp: 0 0 120px -20px oklch(0.655 0.132 42 / 28%);
+  --glass: oklch(0.32 0.07 350 / 26%);
 }
 
 .dark {
@@ -132,12 +149,20 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     background-color: var(--color-background);
-    background-image: var(--gradient-ember);
+    background-image: var(--gradient-dusk);
     background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 1.0125rem;
+    line-height: 1.7;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -146,40 +171,139 @@
   h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: 0.01em;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+
+  ::selection {
+    background: var(--rose);
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* Soft film grain — gives the page a paper/analog feel, no boxes needed */
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: radial-gradient(oklch(1 0 0 / 60%) 0.5px, transparent 0.5px);
+    background-size: 3px 3px;
   }
 }
 
 @utility glass-panel {
   background-color: var(--glass);
-  backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(18px) saturate(130%);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-warm);
 }
 
-@utility text-gradient-gold {
-  background-image: var(--gradient-gold);
+@utility text-gradient-warm {
+  background-image: var(--gradient-warm);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
 
-@utility cream-card {
+/* legacy alias so older markup keeps working */
+@utility text-gradient-gold {
+  background-image: var(--gradient-warm);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Warm paper sheet — the only "surface" in the design */
+@utility paper {
   background-color: var(--cream);
+  background-image: radial-gradient(
+      90% 60% at 0% 0%,
+      oklch(0.755 0.072 22 / 16%) 0%,
+      transparent 60%
+    ),
+    radial-gradient(80% 70% at 100% 100%, oklch(0.735 0.098 79 / 18%) 0%, transparent 60%);
   color: var(--ink);
-  box-shadow: var(--shadow-warm);
+  box-shadow: var(--shadow-warm), var(--shadow-lamp);
+}
+
+/* Hand-drawn ink underline used instead of bordered inputs */
+@utility ink-line {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  border-bottom: 1px solid color-mix(in oklab, var(--ink) 28%, transparent);
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-bottom-color: var(--ember);
+    box-shadow: 0 6px 18px -14px var(--ember);
+  }
+}
+
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--gold) 55%, transparent),
+    transparent
+  );
 }
 
 @keyframes float-slow {
   0%,
   100% {
-    transform: translateY(0) rotate(-1deg);
+    transform: translateY(0) rotate(-1.2deg);
   }
   50% {
-    transform: translateY(-14px) rotate(1deg);
+    transform: translateY(-16px) rotate(1.2deg);
   }
 }
 
 @utility animate-float {
-  animation: float-slow 9s ease-in-out infinite;
+  animation: float-slow 11s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+}
+
+@utility animate-breathe {
+  animation: breathe 7s ease-in-out infinite;
+}
+
+@keyframes ink-sweep {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@utility animate-ink {
+  background-size: 200% auto;
+  animation: ink-sweep 9s linear infinite;
 }

@@ -3,19 +3,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Heart, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   CATEGORIES,
   HIGHLIGHT_OPTIONS,
@@ -35,6 +22,28 @@ const schema = z.object({
   community_question: z.string().trim().max(300).optional(),
   nickname: z.string().trim().max(40).optional(),
 });
+
+function Ask({
+  children,
+  hint,
+  htmlFor,
+}: {
+  children: React.ReactNode;
+  hint?: string;
+  htmlFor?: string;
+}) {
+  return (
+    <div className="space-y-1">
+      <label
+        htmlFor={htmlFor}
+        className="block font-display text-[1.35rem] italic leading-snug text-ink"
+      >
+        {children}
+      </label>
+      {hint && <p className="text-sm text-ink/55">{hint}</p>}
+    </div>
+  );
+}
 
 export function ConfessionForm({
   onStartChat,
@@ -112,72 +121,72 @@ export function ConfessionForm({
     }
   };
 
+  const pill = (active: boolean) =>
+    `rounded-full px-4 py-1.5 text-sm transition-all duration-300 ${
+      active
+        ? "bg-ink text-cream shadow-sm"
+        : "bg-ink/[0.06] text-ink/75 hover:bg-ink/[0.12] hover:text-ink"
+    }`;
+
   return (
-    <form onSubmit={submit} className="space-y-8 rounded-3xl glass-panel p-6 sm:p-8">
-      <div className="space-y-2">
-        <Label htmlFor="content" className="font-display text-xl text-primary">
-          What's on your mind?
-        </Label>
-        <p className="text-sm text-muted-foreground">
-          A situation, a doubt, an emotion — anything. No names, no judgment.
-        </p>
-        <Textarea
+    <form onSubmit={submit} className="space-y-11 text-ink">
+      <div className="space-y-3">
+        <Ask htmlFor="content" hint="A situation, a doubt, an emotion — anything.">
+          What&apos;s on your mind?
+        </Ask>
+        <textarea
           id="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           maxLength={5000}
           rows={6}
           placeholder="Likh dijiye… jo dil mein hai."
-          className="resize-y"
+          className="ink-line w-full resize-y px-0 py-3 text-lg leading-relaxed text-ink placeholder:text-ink/35"
         />
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="font-display text-xl text-primary">Is it related to…</legend>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => {
-            const active = categories.includes(c);
-            return (
-              <button
-                type="button"
-                key={c}
-                onClick={() => toggleCategory(c)}
-                aria-pressed={active}
-                className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                  active
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card/50 text-foreground hover:bg-accent"
-                }`}
-              >
-                {c}
-              </button>
-            );
-          })}
+        <legend className="font-display text-[1.35rem] italic text-ink">Is it related to…</legend>
+        <div className="flex flex-wrap gap-2 pt-1">
+          {CATEGORIES.map((c) => (
+            <button
+              type="button"
+              key={c}
+              onClick={() => toggleCategory(c)}
+              aria-pressed={categories.includes(c)}
+              className={pill(categories.includes(c))}
+            >
+              {c}
+            </button>
+          ))}
         </div>
       </fieldset>
 
       <fieldset className="space-y-3">
-        <legend className="font-display text-xl text-primary">
-          Do you want advice, just to vent, or both?
+        <legend className="font-display text-[1.35rem] italic text-ink">
+          Advice, just to vent, or both?
         </legend>
-        <RadioGroup value={intent} onValueChange={setIntent} className="gap-2">
+        <div className="flex flex-wrap gap-2 pt-1">
           {INTENTS.map((i) => (
-            <div key={i.value} className="flex items-center gap-3">
-              <RadioGroupItem value={i.value} id={`intent-${i.value}`} />
-              <Label htmlFor={`intent-${i.value}`} className="font-normal">
-                {i.label}
-              </Label>
-            </div>
+            <button
+              type="button"
+              key={i.value}
+              onClick={() => setIntent(i.value)}
+              aria-pressed={intent === i.value}
+              className={pill(intent === i.value)}
+            >
+              {i.label}
+            </button>
           ))}
-        </RadioGroup>
+        </div>
       </fieldset>
 
       <fieldset className="space-y-3">
-        <legend className="font-display text-xl text-primary">
-          How are you feeling emotionally right now?
+        <legend className="font-display text-[1.35rem] italic text-ink">
+          How are you feeling right now?
         </legend>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">Very Low</span>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-3 pt-1">
+          <span className="text-xs uppercase tracking-widest text-ink/45">Very low</span>
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((n) => (
               <button
@@ -186,112 +195,138 @@ export function ConfessionForm({
                 onClick={() => setMood(n)}
                 aria-label={MOOD_LABELS[n]}
                 aria-pressed={mood === n}
-                className={`flex size-11 items-center justify-center rounded-full border transition-all ${
-                  mood === n
-                    ? "scale-110 border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card/50 text-muted-foreground hover:bg-accent"
+                className={`grid size-11 place-items-center rounded-full transition-all duration-300 ${
+                  mood >= n
+                    ? "scale-105 bg-ember/15 text-ember"
+                    : "bg-ink/[0.06] text-ink/35 hover:bg-ink/[0.12]"
                 }`}
               >
                 <Heart className={`size-4 ${mood >= n ? "fill-current" : ""}`} />
               </button>
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">Uplifted</span>
+          <span className="text-xs uppercase tracking-widest text-ink/45">Uplifted</span>
         </div>
-        <p className="text-sm text-primary/80">{MOOD_LABELS[mood]}</p>
+        <p className="font-display text-lg italic text-ember">{MOOD_LABELS[mood]}</p>
       </fieldset>
 
       <div className="space-y-2">
-        <Label htmlFor="question" className="font-display text-xl text-primary">
-          Any specific question you want the community to answer?
-        </Label>
-        <Input
+        <Ask htmlFor="question">Any question you want the community to answer?</Ask>
+        <input
           id="question"
           value={question}
           maxLength={300}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Optional"
+          className="ink-line w-full px-0 py-2.5 text-ink placeholder:text-ink/35"
         />
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="font-display text-xl text-primary">
-          Do you want us to highlight your story on Instagram?
+        <legend className="font-display text-[1.35rem] italic text-ink">
+          Highlight your story on Instagram?
         </legend>
-        <RadioGroup value={highlight} onValueChange={setHighlight} className="flex gap-6">
+        <div className="flex flex-wrap gap-2 pt-1">
           {HIGHLIGHT_OPTIONS.map((h) => (
-            <div key={h} className="flex items-center gap-2">
-              <RadioGroupItem value={h} id={`hl-${h}`} />
-              <Label htmlFor={`hl-${h}`} className="font-normal">
-                {h}
-              </Label>
-            </div>
+            <button
+              type="button"
+              key={h}
+              onClick={() => setHighlight(h)}
+              aria-pressed={highlight === h}
+              className={pill(highlight === h)}
+            >
+              {h}
+            </button>
           ))}
-        </RadioGroup>
+        </div>
       </fieldset>
 
       <div className="space-y-2">
-        <Label htmlFor="nickname" className="font-display text-xl text-primary">
-          Set a "nickname" for your story
-        </Label>
-        <Input
+        <Ask htmlFor="nickname">Set a nickname for your story</Ask>
+        <input
           id="nickname"
           value={nickname}
           maxLength={40}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="Optional — e.g. Chhoti si baat"
+          className="ink-line w-full px-0 py-2.5 text-ink placeholder:text-ink/35"
         />
       </div>
 
-      <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <Label htmlFor="chat" className="font-display text-lg text-primary">
-              Open live chat with an admin / mentor
-            </Label>
-            <p className="text-sm text-muted-foreground">
-              A private, anonymous, disappearing conversation.
+      <div className="space-y-4 border-t border-ink/15 pt-7">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+          <div className="min-w-0">
+            <p className="font-display text-[1.2rem] italic text-ink">
+              Open a live chat with a mentor
             </p>
+            <p className="text-sm text-ink/55">A private, anonymous, disappearing conversation.</p>
           </div>
-          <Switch id="chat" checked={chatEnabled} onCheckedChange={setChatEnabled} />
+          <button
+            type="button"
+            role="switch"
+            aria-checked={chatEnabled}
+            aria-label="Open live chat with a mentor"
+            onClick={() => setChatEnabled((v) => !v)}
+            className={`relative mt-1 h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${
+              chatEnabled ? "bg-ember" : "bg-ink/20"
+            }`}
+          >
+            <span
+              className={`absolute top-1 size-5 rounded-full bg-cream transition-all duration-300 ${
+                chatEnabled ? "left-6" : "left-1"
+              }`}
+            />
+          </button>
         </div>
+
         {chatEnabled && (
-          <Select value={ttl} onValueChange={setTtl}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {TTL_OPTIONS.map((t) => (
-                <SelectItem key={t.value} value={t.value}>
-                  {t.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex flex-wrap gap-2">
+            {TTL_OPTIONS.map((t) => (
+              <button
+                type="button"
+                key={t.value}
+                onClick={() => setTtl(t.value)}
+                aria-pressed={ttl === t.value}
+                className={pill(ttl === t.value)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
-      <label className="flex items-start gap-3 text-sm text-muted-foreground">
+      <label className="flex items-start gap-3 text-sm text-ink/70">
         <input
           type="checkbox"
           checked={agreed}
           onChange={(e) => setAgreed(e.target.checked)}
-          className="mt-1 size-4 accent-[oklch(0.769_0.129_88.3)]"
+          className="mt-1 size-4 shrink-0 accent-[oklch(0.655_0.132_42)]"
         />
         <span>
           I have read and accept the{" "}
-          <a href="/terms" className="text-primary underline underline-offset-4">
-            Disclaimer & Terms of Service
+          <a
+            href="/terms"
+            className="text-ember underline decoration-ember/40 underline-offset-4 hover:decoration-ember"
+          >
+            Disclaimer &amp; Terms of Service
           </a>
           . I understand Dil Ki Baat is peer support, not therapy or emergency care, and I will not
           share personal details of others.
         </span>
       </label>
 
-      <Button type="submit" size="lg" className="w-full gap-2" disabled={loading}>
-        {loading && <Loader2 className="size-4 animate-spin" />}
-        Share anonymously
-      </Button>
+      <button
+        type="submit"
+        disabled={loading}
+        className="group relative w-full overflow-hidden rounded-full bg-ink px-8 py-4 font-display text-lg italic text-cream transition-transform duration-500 hover:scale-[1.015] disabled:opacity-60"
+      >
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-plum via-ember to-plum opacity-70 transition-transform duration-700 group-hover:translate-x-0" />
+        <span className="relative inline-flex items-center justify-center gap-2">
+          {loading && <Loader2 className="size-4 animate-spin" />}
+          Share anonymously
+        </span>
+      </button>
     </form>
   );
 }
