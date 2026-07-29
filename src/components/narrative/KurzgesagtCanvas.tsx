@@ -387,11 +387,8 @@ function actLoop(c: Ctx, a: number, local: number, t: number) {
     c.rotate((rnd(i + 4) - 0.5) * 0.25);
     c.scale(s, s);
     c.globalAlpha = alpha;
-    c.fillStyle = "rgba(247,244,239,0.94)";
-    roundRect(c, -180, -48, 360, 96, 18);
-    c.fill();
-    c.fillStyle = "rgba(26,10,10,0.86)";
     c.font = "500 26px 'Nunito Sans', system-ui, sans-serif";
+    // wrap first, then grow the card to fit — text can never spill out
     const words = LOOP_CARDS[i].split(" ");
     const lines: string[] = [];
     let line = "";
@@ -403,7 +400,14 @@ function actLoop(c: Ctx, a: number, local: number, t: number) {
       line += w + " ";
     }
     lines.push(line.trim());
-    lines.slice(0, 3).forEach((l, k) => c.fillText(l, 0, -8 + k * 32));
+    const rows = lines.length;
+    const height = rows * 34 + 30;
+    c.fillStyle = "rgba(247,244,239,0.94)";
+    roundRect(c, -180, -height / 2, 360, height, 18);
+    c.fill();
+    c.fillStyle = "rgba(26,10,10,0.86)";
+    lines.forEach((l, k) => c.fillText(l, 0, -height / 2 + 24 + k * 34));
+
     c.restore();
   }
   c.restore();
