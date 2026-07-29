@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { HeartBackground } from "@/components/HeartBackground";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ConfessionForm } from "@/components/ConfessionForm";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Reveal, RevealWords } from "@/components/Reveal";
+import { ScrollWord } from "@/components/ScrollFrames";
 import { FAQS, WHISPERS, WHY_IT_WORKS } from "@/lib/dilkibaat";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,23 +38,28 @@ type Room = { roomId: string; alias: string; ttl: string };
 const STEPS = [
   {
     n: "01",
+    w: "Write",
     hi: "The first sentence",
     t: "You write it down",
-    d: "In whatever language your feelings arrive in. No name, no sign-up, no explanation owed to anyone. Just the truth as it is right now.",
+    d: "No name, no sign-up, no explanation owed to anyone. Type it the way it actually sounds at 2am — half-sentences and all. The messy version is the honest one.",
   },
   {
     n: "02",
+    w: "Held",
     hi: "Our part of the promise",
     t: "We hold it carefully",
-    d: "Your words are kept exactly as you wrote them, with every trace of you removed before another human ever reads a line.",
+    d: "Your words stay exactly as you wrote them, with every trace of you stripped out before another human reads a line. No screenshots, no receipts, no sharing without your yes.",
   },
   {
     n: "03",
+    w: "Heard",
     hi: "What comes back",
     t: "People answer honestly",
-    d: "Perspective, lived experience, and the occasional uncomfortable truth — from people who once needed to hear it themselves.",
+    d: "Perspective, lived experience, and the occasional uncomfortable truth — from people who once needed to hear it themselves. No toxic positivity, no lectures.",
   },
 ];
+
+const WHY_WORDS = ["Name it", "Witness", "Distance", "Hindsight"];
 
 const PROMISES = [
   { t: "No name is ever asked", d: "There is nothing to sign up for, and nothing to take back." },
@@ -59,6 +67,7 @@ const PROMISES = [
   { t: "Conversations that disappear", d: "Choose an hour, a day, or never. Your call, always." },
   { t: "Nothing is shared without a yes", d: "Your story stays here unless you decide otherwise." },
 ];
+
 
 function Index() {
   const [room, setRoom] = useState<Room | null>(null);
@@ -107,16 +116,23 @@ function Index() {
             />
           </h1>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 max-w-lg text-pretty text-lg text-muted-foreground sm:ml-auto sm:mr-[6%] sm:text-right"
+            className="mt-8 max-w-xl space-y-4 text-pretty text-lg text-muted-foreground sm:ml-auto sm:mr-[6%] sm:text-right"
           >
-            Everyone is carrying something they have never put into words — a love, a fear, a
-            decision, a quiet kind of loneliness. This is a place to set it down and be read by
-            people who will not flinch.
-          </motion.p>
+            <p>
+              The 2am overthinking. The situationship you can't explain to anyone. The pressure to
+              have it all figured out by 25. The group chat where everyone's doing great and you're
+              just… coping.
+            </p>
+            <p>
+              You don't have to perform here. Type it messy, type it half-finished, type it the way
+              it actually sounds in your head. Real people read it and answer like humans, not like
+              a self-help caption.
+            </p>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -124,18 +140,28 @@ function Index() {
             transition={{ duration: 1.2, delay: 1.1 }}
             className="mt-12 flex flex-col items-start gap-8 sm:flex-row sm:items-center"
           >
-            <a
+            <motion.a
               href="#share"
-              className="group relative inline-flex items-center gap-3 font-display text-xl italic text-cream"
+              whileHover={{ y: -3 }}
+              transition={{ type: "spring", stiffness: 260, damping: 18 }}
+              className="group relative inline-flex items-center gap-4 font-display text-2xl italic text-cream sm:text-3xl"
             >
-              <span className="relative">
-                Begin where it hurts
-                <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-100 bg-gradient-to-r from-primary via-rose to-ember transition-transform duration-700 group-hover:scale-x-[1.06]" />
+              <span className="relative inline-block">
+                <span className="relative z-10">Begin where it hurts</span>
+                <span className="absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-rose to-ember transition-transform duration-700 ease-out group-hover:scale-x-100" />
+                <span className="animate-shimmer-line absolute -bottom-1 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-ember to-transparent" />
               </span>
-              <span className="grid size-9 place-items-center rounded-full border border-border text-primary transition-transform duration-500 group-hover:translate-y-1">
-                ↓
+              <span className="relative grid size-11 shrink-0 place-items-center rounded-full border border-border text-primary">
+                <span className="absolute inset-0 rounded-full bg-ember/15 blur-md transition-all duration-500 group-hover:bg-ember/35" />
+                <motion.span
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative"
+                >
+                  ↓
+                </motion.span>
               </span>
-            </a>
+            </motion.a>
             <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm tracking-wide text-muted-foreground">
               <span>Anonymous</span>
               <span className="text-primary/50">·</span>
@@ -144,6 +170,7 @@ function Index() {
               <span>Judgement-free</span>
             </div>
           </motion.div>
+
         </motion.div>
       </section>
 
@@ -166,72 +193,60 @@ function Index() {
         </Reveal>
       </section>
 
-      {/* ── Frame 3 · the three steps, broken grid ──────────── */}
-      <section className="relative mx-auto max-w-6xl px-6 pb-28 sm:px-10 sm:pb-44">
+      {/* ── Frame 3 · three steps, told in single words ─────── */}
+      <section className="relative mx-auto max-w-6xl overflow-hidden px-6 pb-24 sm:px-10 sm:pb-36">
         <Reveal from="left">
-          <h2 className="font-display text-[clamp(1.8rem,4.5vw,3rem)] text-cream/90">
-            How it <span className="text-gradient-warm italic">works</span>
-          </h2>
-          <p className="mt-4 max-w-md leading-relaxed text-muted-foreground">
-            Three steps, no accounts, no waiting rooms. Most people finish writing in under four
-            minutes and feel lighter before they even press send.
+          <p className="text-[0.62rem] uppercase tracking-[0.42em] text-ember/80">
+            Three steps · about four minutes
           </p>
+          <h2 className="mt-4 max-w-2xl font-display text-[clamp(2rem,5.5vw,3.6rem)] leading-[1.05] text-cream/90">
+            No accounts. No waiting room.{" "}
+            <span className="text-gradient-warm italic">Just say it.</span>
+          </h2>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-16 sm:gap-20 md:grid-cols-12">
+        <div className="mt-10 divide-y divide-border/40">
           {STEPS.map((s, i) => (
-            <Reveal
+            <ScrollWord
               key={s.t}
-              from={i === 1 ? "right" : "up"}
-              delay={i * 0.12}
-              className={
-                i === 0
-                  ? "md:col-span-5"
-                  : i === 1
-                    ? "md:col-span-5 md:col-start-8 md:mt-24"
-                    : "md:col-span-6 md:col-start-3 md:mt-10"
-              }
-            >
-              <article className="relative">
-                <span className="pointer-events-none absolute -left-4 -top-20 select-none font-display text-[7rem] leading-none text-plum/30 sm:-top-28 sm:text-[10rem]">
-                  {s.n}
-                </span>
-                <div className="relative">
-                  <p className="text-[0.65rem] uppercase tracking-[0.32em] text-ember/80">{s.hi}</p>
-                  <h3 className="mt-3 font-display text-3xl italic text-primary">{s.t}</h3>
-                  <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">{s.d}</p>
-                </div>
-              </article>
-            </Reveal>
+              index={i}
+              word={s.w}
+              eyebrow={s.hi}
+              title={s.t}
+              body={s.d}
+              align={i % 2 ? "right" : "left"}
+            />
           ))}
         </div>
       </section>
 
       {/* ── Frame 4 · why writing it down works ─────────────── */}
-      <section className="relative mx-auto max-w-6xl px-6 pb-28 sm:px-10 sm:pb-40">
+      <section className="relative mx-auto max-w-6xl overflow-hidden px-6 pb-24 sm:px-10 sm:pb-36">
         <Reveal from="none">
-          <p className="text-[0.65rem] uppercase tracking-[0.32em] text-ember/80">
+          <p className="text-[0.62rem] uppercase tracking-[0.42em] text-ember/80">
             Why this actually helps
           </p>
-          <h2 className="mt-4 max-w-3xl font-display text-[clamp(1.8rem,4.5vw,3rem)] leading-tight text-cream/90">
+          <h2 className="mt-4 max-w-3xl font-display text-[clamp(2rem,5.5vw,3.6rem)] leading-[1.05] text-cream/90">
             Feelings shrink the moment they{" "}
             <span className="text-gradient-warm italic">become sentences</span>
           </h2>
         </Reveal>
 
-        <div className="mt-16 grid gap-x-16 gap-y-14 sm:grid-cols-2">
+        <div className="mt-10 divide-y divide-border/40">
           {WHY_IT_WORKS.map((w, i) => (
-            <Reveal key={w.t} from={i % 2 ? "right" : "left"} delay={(i % 2) * 0.1}>
-              <div className={i % 2 ? "sm:mt-16" : ""}>
-                <p className="font-display text-sm italic tracking-wide text-rose">{w.k}</p>
-                <h3 className="mt-2 font-display text-2xl leading-snug text-cream/90">{w.t}</h3>
-                <div className="my-4 h-px w-16 bg-gradient-to-r from-primary/70 to-transparent" />
-                <p className="max-w-md leading-relaxed text-muted-foreground">{w.d}</p>
-              </div>
-            </Reveal>
+            <ScrollWord
+              key={w.t}
+              index={i}
+              word={WHY_WORDS[i] ?? w.k}
+              eyebrow={w.k}
+              title={w.t}
+              body={w.d}
+              align={i % 2 ? "right" : "left"}
+            />
           ))}
         </div>
       </section>
+
 
       {/* ── Frame 5 · the whisper wall ──────────────────────── */}
       <section className="relative overflow-hidden px-6 pb-28 sm:px-10 sm:pb-40">
@@ -335,21 +350,8 @@ function Index() {
         </dl>
       </section>
 
-      <footer className="relative px-6 pb-16 text-center text-sm text-muted-foreground">
-        <div className="hairline mx-auto mb-10 max-w-4xl" />
-        <p className="font-display text-lg italic text-cream/70">
-          Your story, without your name attached to it.
-        </p>
-        <p className="mt-3">Dil Ki Baat — a community initiative by aapkamentor.ai</p>
-        <p className="mt-2">
-          <Link
-            to="/terms"
-            className="text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:decoration-primary"
-          >
-            Disclaimer & Terms of Service
-          </Link>
-        </p>
-      </footer>
+      <SiteFooter />
+
 
       {room && (
         <ChatWidget
