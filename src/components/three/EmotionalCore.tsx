@@ -146,8 +146,8 @@ function Core() {
 
     if (glow.current) {
       const m = glow.current.material as THREE.MeshBasicMaterial;
-      m.opacity = 0.1 + ex * 0.3 + aura * 0.2;
-      const gs = 0.9 + ex * 0.7 + Math.sin(t * 0.9) * 0.04 + aura * 1.4;
+      m.opacity = 0.05 + ex * 0.1 + aura * 0.1;
+      const gs = 0.8 + ex * 0.3 + Math.sin(t * 0.9) * 0.04 + aura * 0.7;
       glow.current.scale.setScalar(gs);
     }
 
@@ -176,11 +176,11 @@ function Core() {
 
       {/* inner light that only reads once the shell opens up */}
       <mesh ref={glow}>
-        <sphereGeometry args={[1.25, 42, 42]} />
+        <sphereGeometry args={[0.95, 42, 42]} />
         <meshBasicMaterial
           color={SUNSET}
           transparent
-          opacity={0.12}
+          opacity={0.08}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
