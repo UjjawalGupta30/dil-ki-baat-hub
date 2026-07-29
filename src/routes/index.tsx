@@ -59,8 +59,10 @@ function Index() {
   const [room, setRoom] = useState<Room | null>(null);
 
   // ACT 4 — once a conversation opens, the core widens into a calm aura
+  // and the drone resolves into a warm harmonic chord.
   useEffect(() => {
     scrollState.connected = !!room;
+    if (room) playRelease();
     return () => {
       scrollState.connected = false;
     };
@@ -70,7 +72,9 @@ function Index() {
     <div className="grain relative min-h-screen">
       <SmoothScroll />
       <CoreCanvas />
+      <AudioToggle />
       <SiteHeader />
+
 
       {/* ── ACT 1 · the weight ─────────────────────────────── */}
       <Hero />
