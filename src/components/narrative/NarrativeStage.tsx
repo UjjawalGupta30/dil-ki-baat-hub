@@ -81,7 +81,7 @@ export function NarrativeStage({
   return (
     <div
       id="pinned-viewport"
-      className="pointer-events-none sticky top-0 z-10 flex h-[100svh] w-full flex-col justify-between overflow-hidden p-5 sm:p-8 md:p-12"
+      className="pointer-events-none sticky top-0 flex h-[100svh] w-full flex-col justify-between overflow-hidden p-5 sm:p-8 md:p-12"
     >
       {/* colour bed, re-tinted every frame */}
       <div
@@ -92,7 +92,7 @@ export function NarrativeStage({
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[radial-gradient(58%_46%_at_50%_46%,transparent_0%,rgb(0_0_0/58%)_100%)]"
+        className="fixed inset-0 -z-10 bg-[radial-gradient(58%_46%_at_50%_46%,transparent_0%,rgb(0_0_0/58%)_100%)]"
       />
 
       <div className="relative flex-1">
