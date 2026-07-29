@@ -17,13 +17,14 @@ const PROMPT_POSITIONS = [
 export function HeartBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 translate-y-[14%] opacity-45 sm:translate-y-[10%] sm:opacity-60 lg:translate-x-[24%] lg:translate-y-[6%]">
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>
             <HeartScene />
           </Suspense>
         </ClientOnly>
       </div>
+
 
       {/* warm lamplight wash */}
       <div className="animate-breathe absolute left-1/2 top-1/3 size-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember/10 blur-[130px]" />
