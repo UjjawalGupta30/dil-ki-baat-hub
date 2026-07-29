@@ -237,3 +237,108 @@ export function destroyAudio() {
   enabled = false;
   emit();
 }
+
+/* ------------------------------------------------------------------ *
+ * Act threshold cues for the eight-act narrative.
+ * ------------------------------------------------------------------ */
+
+/** Airy sweep used when the story crosses into a new act. */
+export function playWhoosh(up = true) {
+  if (!ctx || !enabled || !master || !noiseBuffer) return;
+  const now = ctx.currentTime;
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer;
+  src.loop = true;
+  src.playbackRate.value = 0.35;
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.Q.value = 1.4;
+  bp.frequency.setValueAtTime(up ? 300 : 2400, now);
+  bp.frequency.exponentialRampToValueAtTime(up ? 2600 : 260, now + 0.85);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.075, now + 0.22);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.95);
+  src.connect(bp).connect(g).connect(master);
+  src.start(now);
+  src.stop(now + 1);
+}
+
+/** Irregular ember pops for the campfire sanctuary. */
+export function playCrackle() {
+  if (!ctx || !enabled || !master || !noiseBuffer) return;
+  const now = ctx.currentTime;
+  for (let i = 0; i < 9; i++) {
+    const t = now + Math.random() * 1.6;
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer;
+    src.playbackRate.value = 1.6 + Math.random() * 2.4;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = 6;
+    bp.frequency.value = 900 + Math.random() * 2600;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.05 + Math.random() * 0.05, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    src.connect(bp).connect(g).connect(master);
+    src.start(t);
+    src.stop(t + 0.16);
+  }
+}
+
+/** Slow heartbeat thud used when the story reaches the biology of pain. */
+export function playHeartbeat() {
+  if (!ctx || !enabled || !master) return;
+  const now = ctx.currentTime;
+  [0, 0.34].forEach((offset, i) => {
+    const osc = ctx!.createOscillator();
+    osc.type = "sine";
+    const t = now + offset;
+    osc.frequency.setValueAtTime(96, t);
+    osc.frequency.exponentialRampToValueAtTime(38, t + 0.22);
+    const g = ctx!.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(i === 0 ? 0.26 : 0.17, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.32);
+    osc.connect(g).connect(master!);
+    osc.start(t);
+    osc.stop(t + 0.36);
+  });
+}
+
+/**
+ * One signature sound per act boundary, so the ear always knows which
+ * chapter of the story the eye is looking at.
+ */
+export function playActCue(act: number) {
+  switch (act) {
+    case 2:
+      playHeartbeat();
+      break;
+    case 3:
+      playWhoosh(true);
+      break;
+    case 4:
+      playClick(1);
+      playWhoosh(false);
+      break;
+    case 5:
+      playShatter();
+      break;
+    case 6:
+      playChime(587.33);
+      playWhoosh(true);
+      break;
+    case 7:
+      playChime(659.25);
+      playChime(880);
+      break;
+    case 8:
+      playCrackle();
+      setWarmth(true);
+      break;
+    default:
+      playWhoosh(false);
+  }
+}
