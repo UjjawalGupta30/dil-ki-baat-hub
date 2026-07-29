@@ -31,32 +31,21 @@ export function ChatWidget({
 
   useEffect(() => {
     let active = true;
-    supabase
-      .from("chat_messages")
-      .select("id, sender_type, message, created_at")
-      .eq("room_id", roomId)
-      .order("created_at", { ascending: true })
-      .then(({ data }) => {
-        if (active && data) setMessages(data as Message[]);
-      });
 
-    const channel = supabase
-      .channel(`room-${roomId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `room_id=eq.${roomId}` },
-        (payload) => {
-          const row = payload.new as Message;
-          setMessages((prev) => (prev.some((m) => m.id === row.id) ? prev : [...prev, row]));
-        },
-      )
-      .subscribe();
+    const load = async () => {
+      const { data } = await supabase.rpc("get_room_messages", { _room_id: roomId });
+      if (active && data) setMessages(data as Message[]);
+    };
+
+    void load();
+    const interval = window.setInterval(() => void load(), 3000);
 
     return () => {
       active = false;
-      supabase.removeChannel(channel);
+      window.clearInterval(interval);
     };
   }, [roomId]);
+
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
