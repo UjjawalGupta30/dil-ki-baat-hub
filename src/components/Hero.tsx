@@ -68,7 +68,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
         <p
           data-hero-fade
-          className="mb-7 rounded-full border border-border px-4 py-1.5 text-[0.6rem] uppercase tracking-[0.34em] text-primary/80"
+          className="mb-7 whitespace-nowrap rounded-full border border-border px-3 py-1.5 text-[0.52rem] uppercase tracking-[0.2em] text-primary/80 sm:px-4 sm:text-[0.6rem] sm:tracking-[0.34em]"
         >
           Anonymous · Unhurried · Judgement free
         </p>
