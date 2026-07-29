@@ -307,3 +307,21 @@
   background-size: 200% auto;
   animation: ink-sweep 9s linear infinite;
 }
+
+@keyframes shimmer-line {
+  0% {
+    opacity: 0;
+    transform: translateX(-60%) scaleX(0.4);
+  }
+  45% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(60%) scaleX(0.4);
+  }
+}
+
+@utility animate-shimmer-line {
+  animation: shimmer-line 4.5s ease-in-out infinite;
+}
