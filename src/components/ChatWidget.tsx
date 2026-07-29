@@ -86,7 +86,7 @@ export function ChatWidget({
         <div className="space-y-3">
           {messages.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              A mentor will join shortly. Say whatever is on your heart — nothing here is tied to
+              A mentor will join shortly. Say whatever is on your heart. Nothing here is tied to
               your identity.
             </p>
           )}

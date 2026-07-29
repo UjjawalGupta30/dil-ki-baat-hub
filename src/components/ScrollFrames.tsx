@@ -50,7 +50,7 @@ export function ScrollWord({
         style={{ y: textY, opacity }}
         className="text-[0.62rem] uppercase tracking-[0.42em] text-ember/80"
       >
-        {String(index + 1).padStart(2, "0")} — {eyebrow}
+        {String(index + 1).padStart(2, "0")} &nbsp; {eyebrow}
       </motion.p>
 
       <motion.h3

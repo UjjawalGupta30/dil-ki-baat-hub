@@ -143,7 +143,7 @@ export function ConfessionForm({
           onChange={(e) => setContent(e.target.value)}
           maxLength={5000}
           rows={6}
-          placeholder="Start anywhere — even in the middle."
+          placeholder="Start anywhere, even in the middle."
           className="ink-line w-full resize-y px-0 py-3 text-lg leading-relaxed text-ink placeholder:text-ink/35"
         />
         <p className="text-xs text-ink/45">
@@ -269,7 +269,7 @@ export function ConfessionForm({
           value={nickname}
           maxLength={40}
           onChange={(e) => setNickname(e.target.value)}
-          placeholder="Optional — something only you would recognise"
+          placeholder="Optional, something only you would recognise"
           className="ink-line w-full px-0 py-2.5 text-ink placeholder:text-ink/35"
         />
       </div>

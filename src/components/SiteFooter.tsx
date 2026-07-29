@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, ShieldCheck } from "lucide-react";
 
 const EMAIL = "dil.ki.baat.humare.sath@gmail.com";
-const INSTAGRAM = "https://instagram.com/aapkamentor.ai";
+const INSTAGRAM = "https://instagram.com/dilkibaat";
 
 export function SiteFooter() {
   return (
@@ -17,12 +17,12 @@ export function SiteFooter() {
             </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
               Dil Ki Baat is a community initiative by{" "}
-              <span className="text-cream/80">aapkamentor.ai</span> — built by people who got tired
+              <span className="text-cream/80">aapkamentor.ai</span>, built by people who got tired
               of pretending they were fine. Real humans read every word.
             </p>
             <p className="mt-5 inline-flex items-center gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-              Anonymous by design · no accounts · no tracking of who you are
+              Anonymous by design. No accounts, no tracking of who you are.
             </p>
           </div>
 
@@ -49,7 +49,7 @@ export function SiteFooter() {
                 >
                   <Instagram className="size-4 shrink-0 text-primary" aria-hidden="true" />
                   <span className="underline decoration-primary/30 underline-offset-4 transition-colors group-hover:decoration-primary">
-                    @aapkamentor.ai
+                    @dilkibaat
                   </span>
                 </a>
               </li>
@@ -81,7 +81,7 @@ export function SiteFooter() {
               </li>
             </ul>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground/80">
-              Peer support and honest perspective — not therapy, diagnosis, or emergency care.
+              Peer support and honest perspective. Not therapy, diagnosis or emergency care.
             </p>
           </div>
         </div>
@@ -89,7 +89,7 @@ export function SiteFooter() {
         <div className="hairline my-10" />
 
         <div className="flex flex-col items-start justify-between gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} aapkamentor.ai · Dil Ki Baat. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} aapkamentor.ai. Dil Ki Baat. All rights reserved.</p>
           <p className="text-muted-foreground/80">Made with a lot of feeling, in India.</p>
         </div>
       </div>
