@@ -312,6 +312,13 @@ function Cloud() {
     el.rotation.x = -scrollState.py * 0.16 + Math.sin(time * 0.18) * 0.05;
     el.rotation.z = anxiety * Math.sin(time * 0.9) * 0.06;
 
+    // On wide screens the cloud slides right so the type column stays clean.
+    // Around the portal act it recentres, because the form sits over it.
+    const wide = state.size.width / state.size.height > 1.15;
+    const centred = smoothstep(0.58, 0.66, p) * (1 - smoothstep(0.74, 0.82, p));
+    const offset = wide ? 2.9 * (1 - centred) : 0;
+    el.position.x += (offset - el.position.x) * (1 - Math.exp(-2 * dt));
+
     const mat = el.material as THREE.PointsMaterial;
     mat.size = 0.046 + fire * 0.03 + anxiety * 0.012;
     mat.opacity = 0.72 + smoothstep(0.4, 0.62, p) * 0.24;
