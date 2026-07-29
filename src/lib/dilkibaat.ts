@@ -1,6 +1,6 @@
 export const CATEGORIES = [
   "Relationship",
-  "Love",
+  "Career",
   "Family",
   "Anxiety",
   "Self thoughts",
@@ -8,6 +8,18 @@ export const CATEGORIES = [
   "Confusion",
   "Other",
 ] as const;
+
+/** The marquee strip: things people actually carry, said the way they say it. */
+export const HINGLISH_THOUGHTS = [
+  "Ghar wale career set chahte hain, par mera dil kuch aur keh raha hai...",
+  "What if I am wasting my twenties?",
+  "Bachpan ke dost ab stranger se lagte hain... is it normal?",
+  "I smile all day and overthink at 2 AM.",
+  "Pyaar tha ya sirf comfort? Samjh nahi aata.",
+  "Everyone my age seems so far ahead of me.",
+  "Sabko lagta hai main strong hoon. Nobody asks twice.",
+  "I said yes when I meant no. Again.",
+];
 
 export const INTENTS = [
   { value: "Advice", label: "I want advice" },
