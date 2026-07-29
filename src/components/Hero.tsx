@@ -54,15 +54,14 @@ export function Hero() {
       className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-5 pb-20 pt-32 sm:px-8"
     >
       {/* 3D pulse sphere, behind everything, never intercepts clicks */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-60 sm:opacity-80"
-      >
-        <ClientOnly fallback={null}>
-          <Suspense fallback={null}>
-            <PulseSphere />
-          </Suspense>
-        </ClientOnly>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/2 aspect-square w-[min(92vw,40rem)] -translate-x-1/2 -translate-y-1/2 opacity-55 sm:opacity-75">
+          <ClientOnly fallback={null}>
+            <Suspense fallback={null}>
+              <PulseSphere />
+            </Suspense>
+          </ClientOnly>
+        </div>
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
       </div>
 
