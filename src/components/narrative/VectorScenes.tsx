@@ -283,10 +283,19 @@ export function VectorScenes() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <linearGradient id="fieldFadeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.12" />
+          <stop offset="26%" stopColor="#fff" stopOpacity="0.28" />
+          <stop offset="52%" stopColor="#fff" stopOpacity="1" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="1" />
+        </linearGradient>
+        <mask id="fieldFade">
+          <rect x="0" y="0" width={W} height={H} fill="url(#fieldFadeGrad)" />
+        </mask>
       </defs>
 
       {/* ─── the continuous field (never unmounts, morphs act to act) ─── */}
-      <g style={{ mixBlendMode: "screen" }}>
+      <g mask="url(#fieldFade)" style={{ mixBlendMode: "screen" }}>
         {Array.from({ length: 30 }).map((_, i) => (
           <line key={`l${i}`} data-fl="" strokeWidth="1" opacity="0" />
         ))}
