@@ -17,6 +17,8 @@ const PROMPT_POSITIONS = [
   "right-[8%] top-[34%] -rotate-3",
   "left-[2%] top-[26%] rotate-1",
   "right-[36%] top-[7%] -rotate-2",
+  "left-[9%] bottom-[34%] -rotate-2",
+  "right-[14%] bottom-[26%] rotate-2",
 ];
 
 const TONES = ["text-rose/70", "text-primary/70", "text-ember/65", "text-cream/50"];
@@ -24,7 +26,7 @@ const TONES = ["text-rose/70", "text-primary/70", "text-ember/65", "text-cream/5
 export function HeartBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 translate-y-[12%] opacity-50 sm:translate-y-[8%] sm:opacity-70 lg:translate-x-[22%] lg:translate-y-[4%]">
+      <div className="absolute inset-0 translate-y-[12%] opacity-60 sm:translate-y-[8%] sm:opacity-80 lg:translate-x-[22%] lg:translate-y-[4%]">
         <ClientOnly fallback={null}>
           <Suspense fallback={null}>
             <StoryHeart />
