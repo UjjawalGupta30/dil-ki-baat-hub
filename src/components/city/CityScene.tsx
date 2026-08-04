@@ -267,11 +267,12 @@ function CrimsonHand() {
   useFrame(({ clock }) => {
     if (!g.current) return;
     const p = cityState.progress;
-    const on = ramp(p, 0.64, 0.82) * (1 - ramp(p, 0.95, 1));
+    // swells through the awakening, then recedes so the release panel can breathe
+    const on = ramp(p, 0.64, 0.8) * (1 - ramp(p, 0.86, 0.95) * 0.72);
     const t = clock.elapsedTime;
     g.current.visible = on > 0.01;
-    g.current.scale.setScalar(0.4 + on * 1.5);
-    g.current.position.set(0, 15 + Math.sin(t * 0.6) * 0.7, -206 + on * 6);
+    g.current.scale.setScalar(0.35 + on * 0.75);
+    g.current.position.set(0, 16 + Math.sin(t * 0.6) * 0.7, -224 + on * 5);
     g.current.rotation.y = t * 0.22;
     g.current.rotation.x = Math.sin(t * 0.4) * 0.18;
     g.current.traverse((o) => {
