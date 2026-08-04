@@ -52,8 +52,7 @@ const word: Variants = {
   exit: {
     y: "-90%",
     opacity: 0,
-    filter: "blur(14px)",
-    transition: { duration: 0.5, ease: [0.7, 0, 0.4, 1] },
+    transition: { duration: 0.42, ease: [0.7, 0, 0.4, 1] },
   },
 };
 
