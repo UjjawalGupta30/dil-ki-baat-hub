@@ -5,7 +5,7 @@ import {
   isAudioEnabled,
   subscribeAudio,
   toggleAudio,
-  speakAct,
+  setDaylight,
 } from "@/lib/audio-engine";
 
 /**
@@ -27,9 +27,9 @@ export function AudioToggle() {
   return (
     <button
       type="button"
-      onClick={() => void toggleAudio().then(() => speakAct(1))}
+      onClick={() => void toggleAudio().then(() => setDaylight())}
       aria-pressed={on}
-      aria-label={on ? "Mute ambient audio" : "Unmute ambient audio"}
+      aria-label={on ? "Mute sound design" : "Unmute sound design"}
       className="relative flex items-center gap-2 rounded-full border border-primary/25 bg-primary/5 px-3 py-2 text-[0.65rem] uppercase tracking-[0.18em] text-primary/80 backdrop-blur-md transition-all duration-500 hover:border-primary/60 hover:text-primary"
     >
       <span
@@ -37,7 +37,7 @@ export function AudioToggle() {
       />
       {on ? <Volume2 className="relative size-4" /> : <VolumeX className="relative size-4" />}
       <span className="relative hidden sm:inline">
-        {on ? "Voice & Music On" : "Voice & Music Off"}
+        {on ? "Sound on" : "Sound off"}
       </span>
     </button>
   );

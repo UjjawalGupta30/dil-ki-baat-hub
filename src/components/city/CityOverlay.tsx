@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import { cityState } from "@/lib/city-state";
 import { FILTERS } from "@/lib/unspoken";
@@ -22,73 +22,242 @@ export function useCityProgress() {
   return p;
 }
 
-const fade = {
-  initial: { opacity: 0, y: 26, filter: "blur(14px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -26, filter: "blur(18px)" },
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/* ------------------------------------------------------------ type motion */
+
+const wordSet: Variants = {
+  initial: {},
+  animate: { transition: { staggerChildren: 0.055, delayChildren: 0.12 } },
+  exit: { transition: { staggerChildren: 0.02, staggerDirection: -1 } },
 };
+
+const word: Variants = {
+  initial: { y: "110%", opacity: 0, rotateX: -55, filter: "blur(10px)" },
+  animate: {
+    y: "0%",
+    opacity: 1,
+    rotateX: 0,
+    filter: "blur(0px)",
+    transition: { duration: 1.05, ease: EASE },
+  },
+  exit: {
+    y: "-90%",
+    opacity: 0,
+    filter: "blur(14px)",
+    transition: { duration: 0.5, ease: [0.7, 0, 0.4, 1] },
+  },
+};
+
+/**
+ * Word-by-word masked reveal. Each word sits inside its own overflow-hidden
+ * slot so it genuinely rises out of the line rather than fading in place.
+ */
+function Words({ text, className }: { text: string; className?: string }) {
+  return (
+    <motion.span
+      variants={wordSet}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className={className}
+      style={{ perspective: 800 }}
+    >
+      {text.split(" ").map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+          <motion.span variants={word} className="inline-block will-change-transform">
+            {w}
+            {"\u00A0"}
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+const softIn: Variants = {
+  initial: { opacity: 0, y: 22, filter: "blur(12px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -18, filter: "blur(16px)" },
+};
+
+/** Thin animated rule used to separate a claim from its source. */
+function Rule({ delay = 0 }: { delay?: number }) {
+  return (
+    <motion.span
+      initial={{ scaleX: 0, opacity: 0 }}
+      animate={{ scaleX: 1, opacity: 1 }}
+      exit={{ scaleX: 0, opacity: 0 }}
+      transition={{ duration: 1.1, delay, ease: EASE }}
+      className="mx-auto block h-px w-24 origin-center bg-gradient-to-r from-transparent via-primary/70 to-transparent"
+    />
+  );
+}
+
+/* ------------------------------------------------------------------ stages */
 
 export function StageText({ p }: { p: number }) {
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center px-6">
       <AnimatePresence mode="wait">
-        {p < 0.13 && (
+        {p < 0.14 && (
           <motion.div
-            key="hook"
-            {...fade}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            key="arrival"
+            variants={softIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.9, ease: EASE }}
             className="max-w-3xl text-center"
           >
-            <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-cream sm:text-6xl md:text-7xl">
-              So you think no one has
-              <span className="block text-gradient-gold">problems in life?</span>
-            </h1>
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: p > 0.03 ? 1 : 0 }}
-              transition={{ duration: 0.7 }}
-              className="mx-auto mt-6 max-w-md text-sm text-muted-foreground sm:text-base"
+              initial={{ opacity: 0, letterSpacing: "0.6em" }}
+              animate={{ opacity: 1, letterSpacing: "0.42em" }}
+              transition={{ duration: 1.4, ease: EASE }}
+              className="font-mono text-[0.55rem] uppercase text-primary/80 sm:text-[0.6rem]"
             >
-              Let&apos;s look deeper behind closed windows. Scroll to enter the city.
+              2:47 AM · the same city
+            </motion.p>
+            <h2 className="mt-6 font-display text-3xl leading-[1.08] tracking-tight text-cream sm:text-5xl md:text-6xl">
+              <Words text="The light went out." />
+              <span className="mt-1 block text-gradient-gold">
+                <Words text="The people did not." />
+              </span>
+            </h2>
+            <motion.p
+              variants={softIn}
+              transition={{ duration: 1, delay: 0.9, ease: EASE }}
+              className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base"
+            >
+              Keep scrolling. Every window you pass belongs to somebody who told everyone
+              they were fine today.
             </motion.p>
           </motion.div>
         )}
 
-        {p >= 0.15 && p < 0.33 && (
+        {p >= 0.16 && p < 0.32 && (
           <motion.div
-            key="rise"
-            {...fade}
-            transition={{ duration: 0.7 }}
-            className="max-w-xl text-center"
+            key="fact"
+            variants={softIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.85, ease: EASE }}
+            className="max-w-2xl text-center"
           >
-            <p className="font-display text-2xl leading-snug text-cream sm:text-4xl">
-              Ten million lit windows.
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.15 }}
+              className="font-mono text-[0.55rem] uppercase tracking-[0.4em] text-primary/70"
+            >
+              not a feeling · a number
+            </motion.p>
+            <h2 className="mt-5 font-display text-[2rem] leading-[1.12] text-cream sm:text-[3rem] md:text-[3.6rem]">
+              <Words text="One in every eight people alive" />
+              <span className="block text-gradient-gold">
+                <Words text="is carrying a mental health condition." />
+              </span>
+            </h2>
+            <div className="mt-7">
+              <Rule delay={1.1} />
+            </div>
+            <motion.p
+              variants={softIn}
+              transition={{ duration: 1, delay: 1.25, ease: EASE }}
+              className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-cream/80 sm:text-base"
+            >
+              That is roughly <span className="text-primary">970 million people</span>, says the
+              World Health Organization. Scroll through your last five conversations. The maths
+              does not spare anyone you know.
+            </motion.p>
+          </motion.div>
+        )}
+
+        {p >= 0.36 && p < 0.44 && (
+          <motion.div
+            key="hint"
+            variants={softIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.8, ease: EASE }}
+            className="max-w-lg pb-[26vh] text-center"
+          >
+            <p className="font-mono text-[0.55rem] uppercase tracking-[0.38em] text-primary/75">
+              tap any lit window
             </p>
-            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-              Every one of them is holding something it never said out loud.
+            <p className="mt-4 font-display text-xl leading-snug text-cream/90 sm:text-2xl">
+              <Words text="Real sentences. Real people. Nobody signed their name." />
             </p>
           </motion.div>
         )}
 
-        {p >= 0.68 && p < 0.85 && (
+        {p >= 0.68 && p < 0.855 && (
           <motion.div
-            key="crimson"
-            {...fade}
-            transition={{ duration: 0.75 }}
-            className="max-w-2xl text-center"
+            key="whocares"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, filter: "blur(20px)", scale: 1.06 }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="max-w-3xl text-center"
           >
-            <motion.h2
-              initial={{ letterSpacing: "0.5em", opacity: 0 }}
-              animate={{ letterSpacing: "0.12em", opacity: 1 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-display text-5xl font-bold text-crimson-glow sm:text-7xl md:text-8xl"
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+              className="font-mono text-[0.55rem] uppercase tracking-[0.42em] text-crimson-glow/80"
             >
-              WHO CARES?
-            </motion.h2>
-            <p className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-cream/85 sm:text-base">
-              Just share it anonymously. Let your experience act as a light for someone else.
-              Let it go.
-            </p>
+              the question that keeps you quiet
+            </motion.p>
+
+            <h2 className="mt-5 flex flex-wrap items-baseline justify-center gap-x-[0.18em]">
+              {"WHO CARES?".split("").map((ch, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 90, rotate: -14, filter: "blur(18px)" }}
+                  animate={{ opacity: 1, y: 0, rotate: 0, filter: "blur(0px)" }}
+                  transition={{
+                    duration: 1.15,
+                    delay: 0.22 + i * 0.065,
+                    ease: EASE,
+                  }}
+                  className="font-display text-[3.4rem] font-black leading-none text-crimson-glow sm:text-[6rem] md:text-[7.5rem]"
+                  style={{ display: ch === " " ? "block" : "inline-block", width: ch === " " ? "0.4em" : undefined }}
+                >
+                  {ch === " " ? "\u00A0" : ch}
+                </motion.span>
+              ))}
+            </h2>
+
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.4, delay: 1.05, ease: EASE }}
+              className="mx-auto mt-4 h-px w-40 origin-center bg-gradient-to-r from-transparent via-crimson-glow/70 to-transparent"
+            />
+
+            <motion.p
+              variants={softIn}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 1.1, delay: 1.15, ease: EASE }}
+              className="mx-auto mt-7 max-w-xl text-sm leading-relaxed text-cream/85 sm:text-base"
+            >
+              You have asked it before. Probably at 3 AM, probably about yourself. Here is the
+              honest answer:{" "}
+              <span className="text-primary">the people who have already sat where you are sitting.</span>{" "}
+              They are one window further down this street, waiting for someone to say it first.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.7 }}
+              className="mt-6 font-mono text-[0.55rem] uppercase tracking-[0.34em] text-muted-foreground"
+            >
+              keep scrolling to say yours · no name, no account
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -96,7 +265,7 @@ export function StageText({ p }: { p: number }) {
   );
 }
 
-/** Category filter rail, only alive through the map act. */
+/** Category filter rail, only alive through the windows act. */
 export function FilterRail({
   p,
   filter,
@@ -106,31 +275,34 @@ export function FilterRail({
   filter: string;
   onFilter: (f: string) => void;
 }) {
-  const on = p >= 0.34 && p < 0.7;
+  const on = p >= 0.34 && p < 0.68;
   return (
     <AnimatePresence>
       {on && (
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 24 }}
-          transition={{ duration: 0.5 }}
-          className="fixed inset-x-0 bottom-24 z-40 flex justify-center px-4"
+          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="fixed inset-x-0 bottom-20 z-40 flex justify-center px-4"
         >
           <div className="glass-panel flex max-w-full gap-1 overflow-x-auto rounded-full p-1.5">
-            {FILTERS.map((f) => (
-              <button
+            {FILTERS.map((f, i) => (
+              <motion.button
                 key={f}
                 type="button"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + i * 0.06, ease: EASE }}
                 onClick={() => onFilter(f)}
-                className={`shrink-0 rounded-full px-4 py-2 text-[0.66rem] uppercase tracking-[0.22em] transition-all duration-300 ${
+                className={`shrink-0 rounded-full px-4 py-2 font-mono text-[0.62rem] uppercase tracking-[0.22em] transition-all duration-300 ${
                   filter === f
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-primary"
                 }`}
               >
                 {f}
-              </button>
+              </motion.button>
             ))}
           </div>
         </motion.div>
@@ -147,6 +319,9 @@ export function ScrollSpine({ p }: { p: number }) {
         className="w-full bg-gradient-to-b from-primary to-ember transition-[height] duration-200"
         style={{ height: `${Math.round(p * 100)}%` }}
       />
+      <span className="absolute -left-9 top-0 font-mono text-[0.5rem] uppercase tracking-[0.2em] text-muted-foreground/60">
+        {String(Math.round(p * 100)).padStart(2, "0")}
+      </span>
     </div>
   );
 }
