@@ -1,11 +1,13 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { Canvas } from "@react-three/fiber";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Instagram, Share2, ShieldCheck } from "lucide-react";
+import { Heart } from "lucide-react";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { HelpModal } from "@/components/HelpModal";
 import { AudioToggle } from "@/components/AudioToggle";
+import { DayGate } from "@/components/DayGate";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ThoughtNodes } from "@/components/city/ThoughtNodes";
 import { ReleaseForm } from "@/components/city/ReleaseForm";
 import {
@@ -23,17 +25,17 @@ const CityScene = lazy(() => import("@/components/city/CityScene"));
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Unspoken | The City of Anonymous Thoughts" },
+      { title: "Dil Ki Baat · Sabke Sath | Say it without your name" },
       {
         name: "description",
         content:
-          "Fly through a 3D city of lit windows and read what people never say out loud, then leave your own burden anonymously. A safe, nameless space by Dil Ki Baat.",
+          "Everybody looks fine from the outside. Hold the light, walk through a 3D city after midnight, read what people never say out loud — then let go of your own, anonymously.",
       },
-      { property: "og:title", content: "Unspoken | The City of Anonymous Thoughts" },
+      { property: "og:title", content: "Dil Ki Baat · Sabke Sath" },
       {
         property: "og:description",
         content:
-          "Behind every lit window is something unsaid. Read them, then release yours anonymously.",
+          "Behind every lit window is something unsaid. Read them, then release yours — no name, no account.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -65,14 +67,10 @@ function useCityInput() {
 function City() {
   useCityInput();
   const p = useCityProgress();
+  const [entered, setEntered] = useState(false);
   const [filter, setFilter] = useState<string>("All");
   const [openId, setOpenId] = useState<string | null>(null);
   const [feed, setFeed] = useState<string[]>(TICKER_LINES);
-  const scrolled = useRef(false);
-
-  useEffect(() => {
-    if (p > 0.02) scrolled.current = true;
-  }, [p]);
 
   return (
     <div className="relative w-full">
@@ -99,18 +97,28 @@ function City() {
         />
       </div>
 
+      {/* the perfect afternoon, until somebody holds it too long */}
+      <ClientOnly fallback={null}>
+        <DayGate onEnter={() => setEntered(true)} />
+      </ClientOnly>
+
       {/* minimal floating chrome */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 pt-4 sm:px-7 sm:pt-6">
+      <motion.header
+        initial={{ opacity: 0, y: -14 }}
+        animate={{ opacity: entered ? 1 : 0, y: entered ? 0 : -14 }}
+        transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 pt-4 sm:px-7 sm:pt-6"
+      >
         <div className="flex min-w-0 items-center gap-2.5">
           <span className="grid size-8 place-items-center rounded-full border border-primary/30">
             <Heart className="size-3.5 fill-primary/70 text-primary" />
           </span>
           <span className="flex min-w-0 flex-col leading-none">
             <span className="truncate font-display text-base tracking-tight text-cream">
-              Unspoken
+              Dil Ki Baat
             </span>
-            <span className="mt-1 truncate text-[0.52rem] uppercase tracking-[0.26em] text-primary/70">
-              Dil Ki Baat · aapkamentor.ai
+            <span className="mt-1 truncate font-mono text-[0.5rem] uppercase tracking-[0.26em] text-primary/70">
+              Sabke Sath · aapkamentor.ai
             </span>
           </span>
         </div>
@@ -118,42 +126,47 @@ function City() {
           <AudioToggle />
           <HelpModal />
         </div>
-      </header>
+      </motion.header>
 
-      <StageText p={p} />
-      <FilterRail p={p} filter={filter} onFilter={setFilter} />
-      <ScrollSpine p={p} />
+      {entered && (
+        <>
+          <StageText p={p} />
+          <FilterRail p={p} filter={filter} onFilter={setFilter} />
+          <ScrollSpine p={p} />
+        </>
+      )}
 
       {/* scroll hint */}
       <AnimatePresence>
-        {p < 0.04 && (
+        {entered && p < 0.04 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 1, delay: 1.2 }}
             className="pointer-events-none fixed inset-x-0 bottom-8 z-40 flex flex-col items-center gap-2"
           >
-            <span className="text-[0.58rem] uppercase tracking-[0.4em] text-primary/70">
-              Scroll to enter
+            <span className="font-mono text-[0.55rem] uppercase tracking-[0.4em] text-primary/70">
+              Scroll to walk in
             </span>
             <span className="h-10 w-[1px] animate-pulse bg-gradient-to-b from-primary to-transparent" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* the release panel floats in once the city turns crimson */}
+      {/* the release panel floats in once the city has turned crimson */}
       <AnimatePresence>
-        {p >= 0.86 && (
+        {entered && p >= 0.86 && (
           <motion.div
             key="release"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto px-4 py-24"
+            className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto px-4 py-20 sm:items-center sm:py-24"
           >
             <ReleaseForm
               onReleased={(text) =>
-                setFeed((f) => [`Someone just released: "${text.slice(0, 90)}"`, ...f].slice(0, 12))
+                setFeed((f) => [`Someone just let go of: "${text.slice(0, 90)}"`, ...f].slice(0, 12))
               }
             />
           </motion.div>
@@ -162,16 +175,17 @@ function City() {
 
       {/* live feed ticker */}
       <AnimatePresence>
-        {p >= 0.86 && (
+        {entered && p >= 0.86 && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-x-0 bottom-0 z-50 overflow-hidden border-t border-cream/10 bg-background/55 py-2.5 backdrop-blur-md"
           >
             <div className="flex w-max animate-[marquee_38s_linear_infinite] gap-14 whitespace-nowrap pl-6">
               {[...feed, ...feed].map((line, i) => (
-                <span key={i} className="text-[0.68rem] tracking-wide text-muted-foreground">
+                <span key={i} className="font-mono text-[0.62rem] tracking-wide text-muted-foreground">
                   {line}
                 </span>
               ))}
@@ -183,47 +197,9 @@ function City() {
       {/* the virtual track that scrubs the flight through the city */}
       <div aria-hidden="true" className="h-[700vh] w-full" />
 
-      <footer className="relative z-40 border-t border-cream/10 bg-background/85 px-6 py-10 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="font-display text-lg text-cream">You are not alone.</p>
-            <p className="mt-1 max-w-md text-xs text-muted-foreground">
-              Nothing here is tied to your name, email or phone. Every thought is stored
-              anonymously and reviewed with care before it becomes a window.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <HelpModal />
-            <a
-              href="https://www.instagram.com/dil.ki.baat.sabkesath"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="flex items-center gap-2 rounded-full border border-cream/12 px-4 py-2 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <Instagram className="size-3.5" /> Follow
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                if (navigator.share) {
-                  void navigator.share({ title: "Unspoken", url: window.location.href });
-                } else {
-                  void navigator.clipboard.writeText(window.location.href);
-                }
-              }}
-              className="flex items-center gap-2 rounded-full border border-cream/12 px-4 py-2 text-[0.62rem] uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              <Share2 className="size-3.5" /> Share
-            </button>
-          </div>
-        </div>
-        <div className="mx-auto mt-8 flex max-w-5xl flex-wrap items-center gap-4 text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground/70">
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="size-3" /> 100% anonymous
-          </span>
-          <span>© {new Date().getFullYear()} Dil Ki Baat by aapkamentor.ai</span>
-        </div>
-      </footer>
+      <div className="relative z-40">
+        <SiteFooter />
+      </div>
     </div>
   );
 }
