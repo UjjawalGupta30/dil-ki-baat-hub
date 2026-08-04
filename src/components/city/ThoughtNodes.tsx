@@ -22,6 +22,7 @@ function Node({
 }) {
   const g = useRef<THREE.Group>(null);
   const ring = useRef<THREE.Mesh>(null);
+  const card = useRef<HTMLDivElement>(null);
 
   useFrame(({ clock }) => {
     const p = cityState.progress;
@@ -29,6 +30,12 @@ function Node({
     const band = clamp01((p - 0.33) / 0.06) * (1 - clamp01((p - 0.68) / 0.05));
     const vis = active ? band : band * 0.14;
     const t = clock.elapsedTime;
+    // the spatial card is DOM, so it has to be faded by style, not group.visible
+    if (card.current) {
+      card.current.style.opacity = String(vis);
+      card.current.style.pointerEvents = vis > 0.35 ? "auto" : "none";
+      card.current.style.transform = `translateY(${(1 - vis) * 14}px)`;
+    }
     if (g.current) {
       g.current.visible = vis > 0.02;
       g.current.position.y = thought.pos[1] + Math.sin(t * 0.7 + thought.pos[2]) * 0.35;
@@ -64,6 +71,7 @@ function Node({
         occlude={false}
         zIndexRange={[20, 0]}
       >
+        <div ref={card} style={{ opacity: 0, transition: "opacity 320ms ease" }}>
         <button
           type="button"
           onClick={() => onOpen(open ? null : thought.id)}
@@ -87,6 +95,7 @@ function Node({
             </span>
           )}
         </button>
+        </div>
       </Html>
     </group>
   );
