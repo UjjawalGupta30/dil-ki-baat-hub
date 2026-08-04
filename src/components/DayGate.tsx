@@ -12,21 +12,91 @@ import {
   stopHold,
 } from "@/lib/audio-engine";
 
-const HOLD_MS = 1800;
+const HOLD_MS = 1600;
 
-/** Jagged fracture lines radiating from the centre of the screen. */
+type Shard = {
+  clip: string;
+  /** centre of the shard in % of the viewport */
+  cx: number;
+  cy: number;
+  /** flight vector */
+  tx: number;
+  ty: number;
+  tz: number;
+  rx: number;
+  ry: number;
+  rz: number;
+  delay: number;
+  dur: number;
+};
+
+/**
+ * Splits the viewport into a jittered triangular mesh. Neighbouring triangles
+ * share vertices, so the pieces are seamless before the break and read as real
+ * glass fragments once they fly apart.
+ */
+function useShards(): Shard[] {
+  return useMemo(() => {
+    const rnd = seeded(90210);
+    const cols = 8;
+    const rows = 6;
+    const pt: { x: number; y: number }[][] = [];
+    for (let r = 0; r <= rows; r++) {
+      pt[r] = [];
+      for (let c = 0; c <= cols; c++) {
+        const edge = r === 0 || c === 0 || r === rows || c === cols;
+        const jx = edge ? 0 : (rnd() - 0.5) * (100 / cols) * 0.72;
+        const jy = edge ? 0 : (rnd() - 0.5) * (100 / rows) * 0.72;
+        pt[r][c] = { x: (c / cols) * 100 + jx, y: (r / rows) * 100 + jy };
+      }
+    }
+    const out: Shard[] = [];
+    const tri = (a: { x: number; y: number }, b: typeof a, c: typeof a) => {
+      const cx = (a.x + b.x + c.x) / 3;
+      const cy = (a.y + b.y + c.y) / 3;
+      const dx = cx - 50;
+      const dy = cy - 50;
+      const dist = Math.hypot(dx, dy) / 70; // 0 at impact point, ~1 at corners
+      const push = 0.55 + rnd() * 1.1;
+      out.push({
+        clip: `polygon(${a.x.toFixed(2)}% ${a.y.toFixed(2)}%, ${b.x.toFixed(2)}% ${b.y.toFixed(2)}%, ${c.x.toFixed(2)}% ${c.y.toFixed(2)}%)`,
+        cx,
+        cy,
+        tx: dx * push * 1.5,
+        ty: dy * push * 1.5 + 6 + rnd() * 26,
+        tz: 190 + (1 - dist) * 620 + rnd() * 220,
+        rx: (rnd() - 0.5) * 78,
+        ry: (rnd() - 0.5) * 78,
+        rz: (rnd() - 0.5) * 90,
+        delay: dist * 190 + rnd() * 70,
+        dur: 900 + rnd() * 620,
+      });
+    };
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const tl = pt[r][c];
+        const tr = pt[r][c + 1];
+        const bl = pt[r + 1][c];
+        const br = pt[r + 1][c + 1];
+        if ((r + c) % 2 === 0) {
+          tri(tl, tr, br);
+          tri(tl, br, bl);
+        } else {
+          tri(tl, tr, bl);
+          tri(tr, br, bl);
+        }
+      }
+    }
+    return out;
+  }, []);
+}
+
+/** Fracture lines that snap across the glass a beat before it lets go. */
 function useCracks() {
   return useMemo(() => {
     const rnd = seeded(31337);
     const lines: { d: string; len: number; w: number }[] = [];
-    const branch = (
-      x: number,
-      y: number,
-      angle: number,
-      length: number,
-      depth: number,
-      width: number,
-    ) => {
+    const branch = (x: number, y: number, angle: number, length: number, depth: number, width: number) => {
       let cx = x;
       let cy = y;
       let a = angle;
@@ -39,25 +109,18 @@ function useCracks() {
         cy += Math.sin(a) * seg;
         d += ` L ${cx.toFixed(1)} ${cy.toFixed(1)}`;
       }
-      lines.push({ d, len: length * 1.35, w: width });
+      lines.push({ d, len: length * 1.4, w: width });
       if (depth > 0) {
         const kids = rnd() > 0.45 ? 2 : 1;
         for (let k = 0; k < kids; k++) {
-          branch(
-            cx,
-            cy,
-            a + (rnd() - 0.5) * 1.5,
-            length * (0.42 + rnd() * 0.3),
-            depth - 1,
-            width * 0.62,
-          );
+          branch(cx, cy, a + (rnd() - 0.5) * 1.5, length * (0.42 + rnd() * 0.3), depth - 1, width * 0.6);
         }
       }
     };
-    const spokes = 11;
+    const spokes = 13;
     for (let i = 0; i < spokes; i++) {
       const a = (i / spokes) * Math.PI * 2 + rnd() * 0.4;
-      branch(50, 50, a, 22 + rnd() * 16, 2, 0.42);
+      branch(50, 50, a, 24 + rnd() * 18, 2, 0.4);
     }
     return lines;
   }, []);
@@ -67,7 +130,7 @@ function useCracks() {
 function Motes() {
   const motes = useMemo(() => {
     const rnd = seeded(8081);
-    return Array.from({ length: 34 }, () => ({
+    return Array.from({ length: 30 }, () => ({
       x: rnd() * 100,
       y: rnd() * 100,
       s: 1 + rnd() * 3.4,
@@ -97,20 +160,20 @@ function Motes() {
 }
 
 /**
- * The opening act: a perfect, over-exposed sunny day. The visitor is invited to
- * press and hold the light at the centre. At full charge the frame freezes,
- * fractures, and drops them into the city after dark.
+ * Act 0. A perfect, over-exposed afternoon. Hold the light and the whole frame
+ * goes to glass: it whitens, fractures, then breaks into ninety-six shards that
+ * fly past the camera and leave the night city behind them.
  */
 export function DayGate({ onEnter }: { onEnter: () => void }) {
+  const shards = useShards();
   const cracks = useCracks();
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<"idle" | "holding" | "frozen" | "gone">("idle");
+  const [phase, setPhase] = useState<"idle" | "holding" | "cracked" | "broken" | "gone">("idle");
   const raf = useRef(0);
   const start = useRef(0);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
-  // the gate owns the viewport until it breaks
   useEffect(() => {
     if (phase === "gone") return;
     const prev = document.body.style.overflow;
@@ -122,15 +185,17 @@ export function DayGate({ onEnter }: { onEnter: () => void }) {
   }, [phase]);
 
   const shatter = useCallback(() => {
-    setPhase("frozen");
+    setPhase("cracked");
     setProgress(1);
     stopHold(true);
     playCrack();
-    window.setTimeout(() => setCityBed(), 700);
+    // cracks race across the glass, then it lets go
+    window.setTimeout(() => setPhase("broken"), 260);
+    window.setTimeout(() => setCityBed(), 620);
     window.setTimeout(() => {
       setPhase("gone");
       onEnter();
-    }, 1500);
+    }, 2150);
   }, [onEnter]);
 
   const beginHold = useCallback(async () => {
@@ -159,7 +224,6 @@ export function DayGate({ onEnter }: { onEnter: () => void }) {
     cancelAnimationFrame(raf.current);
     stopHold();
     setPhase("idle");
-    // ease the ring back down instead of snapping
     const from = progress;
     const t0 = performance.now();
     const back = () => {
@@ -172,149 +236,201 @@ export function DayGate({ onEnter }: { onEnter: () => void }) {
 
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
-  const R = 62;
+  const R = 58;
   const C = 2 * Math.PI * R;
-  const frozen = phase === "frozen";
+  const breaking = phase === "cracked" || phase === "broken";
+  const broken = phase === "broken";
+
+  /** the frame itself, reused as the fill of every shard */
+  const plate = (
+    <>
+      <img
+        src={dayImage}
+        alt="Two hands reaching for each other in bright afternoon sunlight"
+        width={1920}
+        height={1280}
+        className="absolute inset-0 size-full object-cover"
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(46%_46%_at_50%_44%,rgb(255_246_214/55%)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(255_250_235/30%)_0%,transparent_40%,rgb(58_16_10/36%)_100%)]" />
+    </>
+  );
 
   return (
     <AnimatePresence>
       {phase !== "gone" && (
         <motion.div
           key="gate"
-          className="fixed inset-0 z-[70] select-none overflow-hidden bg-[#f6ecd8]"
+          className="fixed inset-0 z-[70] select-none overflow-hidden"
+          style={{ perspective: "900px", perspectiveOrigin: "50% 48%" }}
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.08, filter: "blur(22px)" }}
-          transition={{ duration: 0.85, ease: [0.7, 0, 0.35, 1] }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {/* the perfect day itself */}
+          {/* intact plate: fades the instant the glass gives way */}
           <motion.div
-            className="absolute inset-0"
-            animate={
-              frozen
-                ? { scale: 1.035, filter: "saturate(0.25) brightness(0.72) contrast(1.15)" }
-                : {
-                    scale: 1 + progress * 0.05,
-                    filter: `saturate(${1 - progress * 0.35}) brightness(${1 + progress * 0.18})`,
-                  }
-            }
-            transition={
-              frozen ? { duration: 0.5, ease: [0.2, 0, 0, 1] } : { duration: 0.2, ease: "linear" }
-            }
+            className="absolute inset-0 bg-[#f6ecd8]"
+            animate={{
+              opacity: broken ? 0 : 1,
+              scale: breaking ? 1.02 : 1 + progress * 0.045,
+              filter: breaking
+                ? "saturate(0.3) brightness(1.25) contrast(1.1)"
+                : `saturate(${1 - progress * 0.4}) brightness(${1 + progress * 0.2})`,
+            }}
+            transition={{ duration: broken ? 0.001 : 0.22, ease: "linear" }}
           >
-            <img
-              src={dayImage}
-              alt="Two hands reaching for each other in bright afternoon sunlight"
-              width={1920}
-              height={1280}
-              className="size-full object-cover"
-            />
-            <div className="absolute inset-0 bg-[radial-gradient(46%_46%_at_50%_44%,rgb(255_246_214/55%)_0%,transparent_70%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(255_250_235/28%)_0%,transparent_38%,rgb(58_16_10/34%)_100%)]" />
+            {plate}
+            <Motes />
           </motion.div>
 
-          <Motes />
-
-          {/* light bloom that swells with the hold */}
+          {/* bloom under the thumb */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 mix-blend-screen transition-opacity duration-200"
+            className="pointer-events-none absolute inset-0 mix-blend-screen"
             style={{
-              opacity: frozen ? 0 : progress * 0.85,
+              opacity: breaking ? 0 : progress * 0.9,
               background:
-                "radial-gradient(30% 30% at 50% 50%, rgb(255 255 255 / 90%) 0%, rgb(255 214 140 / 35%) 45%, transparent 72%)",
+                "radial-gradient(28% 28% at 50% 50%, rgb(255 255 255 / 92%) 0%, rgb(255 214 140 / 38%) 46%, transparent 72%)",
             }}
           />
 
-          {/* white flash at the instant of impact */}
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-white"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: frozen ? [0.95, 0] : 0 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
-          />
-
-          {/* the fracture */}
+          {/* fracture lines snap across before the break */}
           <svg
             aria-hidden="true"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             className="pointer-events-none absolute inset-0 size-full"
+            style={{ opacity: broken ? 0 : 1, transition: "opacity 120ms linear" }}
           >
             {cracks.map((c, i) => (
               <g key={i}>
                 <path
                   d={c.d}
                   fill="none"
-                  stroke="rgb(10 6 4 / 55%)"
-                  strokeWidth={c.w * 2.1}
+                  stroke="rgb(12 6 4 / 45%)"
+                  strokeWidth={c.w * 2}
                   strokeLinecap="round"
                   style={{
                     strokeDasharray: c.len,
-                    strokeDashoffset: frozen ? 0 : c.len,
-                    transition: `stroke-dashoffset ${340 + i * 26}ms cubic-bezier(.16,1,.3,1) ${i * 12}ms`,
+                    strokeDashoffset: breaking ? 0 : c.len,
+                    transition: `stroke-dashoffset ${150 + i * 10}ms cubic-bezier(.2,.9,.2,1) ${i * 5}ms`,
                   }}
                 />
                 <path
                   d={c.d}
                   fill="none"
-                  stroke="rgb(255 250 236 / 92%)"
+                  stroke="rgb(255 252 240 / 95%)"
                   strokeWidth={c.w}
                   strokeLinecap="round"
                   style={{
                     strokeDasharray: c.len,
-                    strokeDashoffset: frozen ? 0 : c.len,
-                    transition: `stroke-dashoffset ${300 + i * 26}ms cubic-bezier(.16,1,.3,1) ${i * 12}ms`,
+                    strokeDashoffset: breaking ? 0 : c.len,
+                    transition: `stroke-dashoffset ${130 + i * 10}ms cubic-bezier(.2,.9,.2,1) ${i * 5}ms`,
                   }}
                 />
               </g>
             ))}
           </svg>
 
-          {/* copy + the hold target */}
-          <div className="absolute inset-0 flex flex-col items-center justify-between px-6 py-10 sm:py-14">
+          {/* the shards: only mounted for the break, then discarded */}
+          {breaking && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              {shards.map((s, i) => (
+                <div
+                  key={i}
+                  className="absolute inset-0 will-change-transform"
+                  style={{
+                    clipPath: s.clip,
+                    WebkitClipPath: s.clip,
+                    transformOrigin: `${s.cx}% ${s.cy}%`,
+                    transform: broken
+                      ? `translate3d(${s.tx}vw, ${s.ty}vh, ${s.tz}px) rotateX(${s.rx}deg) rotateY(${s.ry}deg) rotateZ(${s.rz}deg)`
+                      : "translate3d(0,0,0)",
+                    opacity: broken ? 0 : 1,
+                    filter: "saturate(0.32) brightness(1.22) contrast(1.08)",
+                    transition: `transform ${s.dur}ms cubic-bezier(.22,.62,.2,1) ${s.delay}ms, opacity ${s.dur * 0.75}ms linear ${s.delay + s.dur * 0.3}ms`,
+                    backfaceVisibility: "hidden",
+                  }}
+                >
+                  {plate}
+                  <span className="absolute inset-0 bg-gradient-to-br from-white/35 via-transparent to-black/25 mix-blend-overlay" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* impact flash */}
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: breaking ? [1, 0] : 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          />
+
+          {/* copy + hold target */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-between px-6 py-9 sm:py-14"
+            style={{ opacity: breaking ? 0 : 1, transition: "opacity 180ms linear" }}
+          >
             <motion.div
-              initial={{ opacity: 0, y: -14 }}
-              animate={{ opacity: frozen ? 0 : 1, y: 0 }}
-              transition={{ duration: 1.1, delay: 0.25 }}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
               className="text-center"
             >
-              <p className="font-mono text-[0.58rem] uppercase tracking-[0.42em] text-[#5a2a14]">
+              <p className="font-mono text-[0.58rem] uppercase tracking-[0.44em] text-[#5a2a14]">
                 Dil Ki Baat · Sabke Sath
               </p>
-              <p className="mt-1.5 font-mono text-[0.5rem] uppercase tracking-[0.3em] text-[#5a2a14]/60">
-                a project by aapkamentor.ai
+              <p className="mt-1.5 font-mono text-[0.48rem] uppercase tracking-[0.3em] text-[#5a2a14]/60">
+                aapkamentor.ai
               </p>
             </motion.div>
 
-            <div className="flex w-full max-w-2xl flex-col items-center text-center">
-              <motion.h1
-                initial={{ opacity: 0, y: 24, filter: "blur(16px)" }}
-                animate={{ opacity: frozen ? 0 : 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 1.3, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display text-3xl leading-[1.06] tracking-tight text-[#3a1409] drop-shadow-[0_2px_18px_rgb(255_244_216/70%)] sm:text-5xl md:text-[3.6rem]"
-              >
-                Everybody looks
-                <span className="block italic">absolutely fine</span>
-                <span className="block">from the outside.</span>
-              </motion.h1>
+            <div className="flex w-full max-w-xl flex-col items-center text-center">
+              <h1 className="font-display text-[2.1rem] leading-[1.02] tracking-tight text-[#3a1409] drop-shadow-[0_2px_18px_rgb(255_244_216/70%)] sm:text-[3.4rem] md:text-[4rem]">
+                {["Everyone", "looks", "fine."].map((w, i) => (
+                  <span key={w} className="inline-block overflow-hidden pb-[0.1em] align-bottom">
+                    <motion.span
+                      className="inline-block"
+                      initial={{ y: "110%", opacity: 0 }}
+                      animate={{ y: "0%", opacity: 1 }}
+                      transition={{ duration: 1, delay: 0.35 + i * 0.09, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {w}&nbsp;
+                    </motion.span>
+                  </span>
+                ))}
+                <span className="block overflow-hidden italic">
+                  <motion.span
+                    className="inline-block"
+                    initial={{ y: "110%", opacity: 0 }}
+                    animate={{ y: "0%", opacity: 1 }}
+                    transition={{ duration: 1.1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    Nobody is.
+                  </motion.span>
+                </span>
+              </h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: frozen ? 0 : 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.9 }}
-                className="mt-5 max-w-md font-sans text-sm leading-relaxed text-[#4a2013]/85 sm:text-[0.95rem]"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 1 }}
+                className="mt-5 max-w-xs font-sans text-sm leading-relaxed text-[#4a2013]/85 sm:max-w-sm sm:text-[0.95rem]"
               >
-                So does this afternoon. Warm light, someone reaching back, nothing wrong
-                anywhere. Hold the light for a moment and see how long that lasts.
+                Hold the light. See what this afternoon is hiding.
               </motion.p>
 
-              {/* press and hold */}
               <motion.button
                 type="button"
-                initial={{ opacity: 0, scale: 0.86 }}
-                animate={{ opacity: frozen ? 0 : 1, scale: 1 }}
-                transition={{ duration: 0.9, delay: 1.25, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 onPointerDown={(e) => {
                   e.currentTarget.setPointerCapture?.(e.pointerId);
                   void beginHold();
@@ -327,29 +443,22 @@ export function DayGate({ onEnter }: { onEnter: () => void }) {
                 }}
                 onKeyUp={cancelHold}
                 aria-label="Press and hold to enter"
-                className="group relative mt-10 grid size-[9.5rem] cursor-pointer place-items-center rounded-full outline-none"
+                className="group relative mt-8 grid size-[8.5rem] cursor-pointer place-items-center rounded-full outline-none sm:size-[9.5rem]"
                 style={{ touchAction: "none" }}
               >
                 <span
-                  className="absolute inset-0 rounded-full bg-white/40 blur-2xl transition-transform duration-300"
-                  style={{ transform: `scale(${0.7 + progress * 0.55})` }}
+                  className="absolute inset-0 rounded-full bg-white/45 blur-2xl transition-transform duration-300"
+                  style={{ transform: `scale(${0.68 + progress * 0.6})` }}
                 />
                 <svg viewBox="0 0 150 150" className="absolute inset-0 size-full -rotate-90">
+                  <circle cx="75" cy="75" r={R} fill="none" stroke="rgb(255 252 244 / 55%)" strokeWidth="1.2" />
                   <circle
                     cx="75"
                     cy="75"
                     r={R}
                     fill="none"
-                    stroke="rgb(255 252 244 / 50%)"
-                    strokeWidth="1.4"
-                  />
-                  <circle
-                    cx="75"
-                    cy="75"
-                    r={R}
-                    fill="none"
-                    stroke="rgb(255 255 255 / 95%)"
-                    strokeWidth="2.6"
+                    stroke="rgb(255 255 255 / 96%)"
+                    strokeWidth="2.8"
                     strokeLinecap="round"
                     strokeDasharray={C}
                     strokeDashoffset={C * (1 - progress)}
@@ -358,28 +467,24 @@ export function DayGate({ onEnter }: { onEnter: () => void }) {
                 <span
                   className="absolute rounded-full border border-white/70"
                   style={{
-                    inset: "1.9rem",
-                    transform: `scale(${1 + progress * 0.12})`,
-                    animation: phase === "idle" ? "gate-breathe 3.6s ease-in-out infinite" : "none",
+                    inset: "1.8rem",
+                    transform: `scale(${1 + progress * 0.14})`,
+                    animation: phase === "idle" ? "gate-breathe 3.4s ease-in-out infinite" : "none",
                   }}
                 />
-                <span className="relative font-mono text-[0.55rem] uppercase leading-[1.9] tracking-[0.34em] text-[#3a1409]">
-                  {phase === "holding" ? "keep holding" : "press"}
-                  <br />
-                  <span className="tracking-[0.4em]">
-                    {phase === "holding" ? `${Math.round(progress * 100)}%` : "& hold"}
-                  </span>
+                <span className="relative font-mono text-[0.56rem] uppercase tracking-[0.36em] text-[#3a1409]">
+                  {phase === "holding" ? `${Math.round(progress * 100)}%` : "hold"}
                 </span>
               </motion.button>
             </div>
 
             <motion.p
               initial={{ opacity: 0 }}
-              animate={{ opacity: frozen ? 0 : 0.75 }}
-              transition={{ duration: 1, delay: 1.6 }}
-              className="font-mono text-[0.52rem] uppercase tracking-[0.34em] text-[#4a2013]"
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 1, delay: 1.5 }}
+              className="font-mono text-[0.5rem] uppercase tracking-[0.34em] text-[#4a2013]"
             >
-              Sound on · headphones recommended
+              Sound on
             </motion.p>
           </div>
         </motion.div>

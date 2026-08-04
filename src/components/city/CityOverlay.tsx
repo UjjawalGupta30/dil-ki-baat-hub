@@ -1,26 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { gsap } from "@/lib/gsap";
-import { cityState } from "@/lib/city-state";
 import { FILTERS } from "@/lib/unspoken";
 
-/** Scroll progress promoted to React state at a coarse rate the DOM can afford. */
+/**
+ * Scroll progress promoted to React state on its own animation frame loop.
+ * Reads the document directly so the overlay can never fall a step behind the
+ * WebGL city, and quantises to 0.5% steps so React only re-renders when the
+ * value actually moves.
+ */
 export function useCityProgress() {
   const [p, setP] = useState(0);
-  const last = useRef(0);
+  const last = useRef(-1);
   useEffect(() => {
-    const tick = () => {
-      const v = Math.round(cityState.progress * 200) / 200;
+    let id = 0;
+    const loop = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const raw = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      const v = Math.round(raw * 200) / 200;
       if (v !== last.current) {
         last.current = v;
         setP(v);
       }
+      id = requestAnimationFrame(loop);
     };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+    id = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(id);
   }, []);
   return p;
 }
+
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -44,8 +52,7 @@ const word: Variants = {
   exit: {
     y: "-90%",
     opacity: 0,
-    filter: "blur(14px)",
-    transition: { duration: 0.5, ease: [0.7, 0, 0.4, 1] },
+    transition: { duration: 0.42, ease: [0.7, 0, 0.4, 1] },
   },
 };
 
@@ -78,7 +85,7 @@ function Words({ text, className }: { text: string; className?: string }) {
 const softIn: Variants = {
   initial: { opacity: 0, y: 22, filter: "blur(12px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -18, filter: "blur(16px)" },
+  exit: { opacity: 0, y: -18, transition: { duration: 0.45, ease: [0.7, 0, 0.4, 1] } },
 };
 
 /** Thin animated rule used to separate a claim from its source. */
@@ -99,7 +106,7 @@ function Rule({ delay = 0 }: { delay?: number }) {
 export function StageText({ p }: { p: number }) {
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center px-6">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {p < 0.14 && (
           <motion.div
             key="arrival"
@@ -129,8 +136,7 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1, delay: 0.9, ease: EASE }}
               className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base"
             >
-              Keep scrolling. Every window you pass belongs to somebody who told everyone
-              they were fine today.
+              Every window you pass said they were fine today.
             </motion.p>
           </motion.div>
         )}
@@ -167,9 +173,8 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1, delay: 1.25, ease: EASE }}
               className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-cream/80 sm:text-base"
             >
-              That is roughly <span className="text-primary">970 million people</span>, says the
-              World Health Organization. Scroll through your last five conversations. The maths
-              does not spare anyone you know.
+              <span className="text-primary">970 million people</span>, says the World Health
+              Organization. Someone in your last five chats is one of them.
             </motion.p>
           </motion.div>
         )}
@@ -244,10 +249,8 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1.1, delay: 1.15, ease: EASE }}
               className="mx-auto mt-7 max-w-xl text-sm leading-relaxed text-cream/85 sm:text-base"
             >
-              You have asked it before. Probably at 3 AM, probably about yourself. Here is the
-              honest answer:{" "}
-              <span className="text-primary">the people who have already sat where you are sitting.</span>{" "}
-              They are one window further down this street, waiting for someone to say it first.
+              You have asked it at 3 AM. The honest answer:{" "}
+              <span className="text-primary">everyone already sitting where you are.</span>
             </motion.p>
 
             <motion.p
