@@ -129,8 +129,7 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1, delay: 0.9, ease: EASE }}
               className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base"
             >
-              Keep scrolling. Every window you pass belongs to somebody who told everyone
-              they were fine today.
+              Every window you pass said they were fine today.
             </motion.p>
           </motion.div>
         )}
@@ -167,9 +166,8 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1, delay: 1.25, ease: EASE }}
               className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-cream/80 sm:text-base"
             >
-              That is roughly <span className="text-primary">970 million people</span>, says the
-              World Health Organization. Scroll through your last five conversations. The maths
-              does not spare anyone you know.
+              <span className="text-primary">970 million people</span>, says the World Health
+              Organization. Someone in your last five chats is one of them.
             </motion.p>
           </motion.div>
         )}
@@ -244,10 +242,8 @@ export function StageText({ p }: { p: number }) {
               transition={{ duration: 1.1, delay: 1.15, ease: EASE }}
               className="mx-auto mt-7 max-w-xl text-sm leading-relaxed text-cream/85 sm:text-base"
             >
-              You have asked it before. Probably at 3 AM, probably about yourself. Here is the
-              honest answer:{" "}
-              <span className="text-primary">the people who have already sat where you are sitting.</span>{" "}
-              They are one window further down this street, waiting for someone to say it first.
+              You have asked it at 3 AM. The honest answer:{" "}
+              <span className="text-primary">everyone already sitting where you are.</span>
             </motion.p>
 
             <motion.p
