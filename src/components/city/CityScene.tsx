@@ -202,7 +202,7 @@ function City() {
             {/* stair block + water tank + antenna clutter on the roof */}
             <mesh position={[b.d * 0.18, b.h + 1.3, b.w * 0.16]}>
               <boxGeometry args={[b.d * 0.3, 2.2, b.w * 0.26]} />
-              <meshStandardMaterial color="#12172233" color-multiply="" roughness={0.75} />
+              <meshStandardMaterial color="#121722" roughness={0.75} />
             </mesh>
             {b.tank && (
               <group position={[-b.d * 0.2, b.h + 1.9, -b.w * 0.18]}>
