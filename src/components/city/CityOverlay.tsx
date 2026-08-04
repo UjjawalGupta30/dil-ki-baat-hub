@@ -1,26 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { gsap } from "@/lib/gsap";
-import { cityState } from "@/lib/city-state";
 import { FILTERS } from "@/lib/unspoken";
 
-/** Scroll progress promoted to React state at a coarse rate the DOM can afford. */
+/**
+ * Scroll progress promoted to React state on its own animation frame loop.
+ * Reads the document directly so the overlay can never fall a step behind the
+ * WebGL city, and quantises to 0.5% steps so React only re-renders when the
+ * value actually moves.
+ */
 export function useCityProgress() {
   const [p, setP] = useState(0);
-  const last = useRef(0);
+  const last = useRef(-1);
   useEffect(() => {
-    const tick = () => {
-      const v = Math.round(cityState.progress * 200) / 200;
+    let id = 0;
+    const loop = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const raw = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      const v = Math.round(raw * 200) / 200;
       if (v !== last.current) {
         last.current = v;
         setP(v);
       }
+      id = requestAnimationFrame(loop);
     };
-    gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+    id = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(id);
   }, []);
   return p;
 }
+
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
