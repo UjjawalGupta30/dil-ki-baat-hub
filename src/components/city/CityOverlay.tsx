@@ -211,7 +211,7 @@ export function StageText({ p }: { p: number }) {
               the question that keeps you quiet
             </motion.p>
 
-            <h2 className="mt-5 flex flex-wrap items-baseline justify-center gap-x-[0.18em]">
+            <h2 className="mt-5 flex flex-nowrap items-baseline justify-center gap-x-[0.06em] whitespace-nowrap">
               {"WHO CARES?".split("").map((ch, i) => (
                 <motion.span
                   key={i}
@@ -222,7 +222,7 @@ export function StageText({ p }: { p: number }) {
                     delay: 0.22 + i * 0.065,
                     ease: EASE,
                   }}
-                  className="font-display text-[3.4rem] font-black leading-none text-crimson-glow sm:text-[6rem] md:text-[7.5rem]"
+                  className="font-display text-[2.4rem] font-black leading-none text-crimson-glow sm:text-[4.4rem] md:text-[6rem]"
                   style={{ display: ch === " " ? "block" : "inline-block", width: ch === " " ? "0.4em" : undefined }}
                 >
                   {ch === " " ? "\u00A0" : ch}
