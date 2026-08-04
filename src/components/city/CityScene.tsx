@@ -171,35 +171,120 @@ function City() {
         <meshStandardMaterial color="#05070b" roughness={0.85} metalness={0.15} />
       </mesh>
 
-      {buildings.map((b, i) => (
-        <group key={i} position={[b.x, 0, b.z]}>
-          <mesh position={[0, b.h / 2, 0]}>
-            <boxGeometry args={[b.d, b.h, b.w]} />
-            <meshStandardMaterial color="#141a26" roughness={0.68} metalness={0.3} />
-          </mesh>
-          {/* water tank topper */}
-          {b.tank && (
-            <mesh position={[b.d * 0.15, b.h + 1.5, 0]}>
-              <cylinderGeometry args={[0.7, 0.7, 1.6, 10]} />
-              <meshStandardMaterial color="#141822" roughness={0.6} />
+      {buildings.map((b, i) => {
+        const inward = b.x < 0 ? 1 : -1;
+        // real towers are stepped: a wider podium, a shaft, then a setback crown
+        const podium = Math.min(6, b.h * 0.22);
+        const crown = b.h * 0.16;
+        const shaft = b.h - podium - crown;
+        return (
+          <group key={i} position={[b.x, 0, b.z]}>
+            {/* podium */}
+            <mesh position={[0, podium / 2, 0]}>
+              <boxGeometry args={[b.d * 1.16, podium, b.w * 1.08]} />
+              <meshStandardMaterial color="#101521" roughness={0.74} metalness={0.24} />
             </mesh>
-          )}
-          {/* balcony slabs facing the alley */}
-          {Array.from({ length: b.balconies }).map((_, k) => (
-            <mesh
-              key={k}
-              position={[
-                (b.x < 0 ? 1 : -1) * (b.d / 2 + 0.42),
-                4 + ((k + 1) * b.h) / (b.balconies + 1),
-                0,
-              ]}
-            >
-              <boxGeometry args={[0.85, 0.14, b.w * 0.72]} />
-              <meshStandardMaterial color="#171b24" roughness={0.7} />
+            {/* shaft */}
+            <mesh position={[0, podium + shaft / 2, 0]}>
+              <boxGeometry args={[b.d, shaft, b.w]} />
+              <meshStandardMaterial color="#141a26" roughness={0.68} metalness={0.3} />
             </mesh>
-          ))}
-        </group>
-      ))}
+            {/* setback crown */}
+            <mesh position={[0, podium + shaft + crown / 2, 0]}>
+              <boxGeometry args={[b.d * 0.82, crown, b.w * 0.84]} />
+              <meshStandardMaterial color="#171d2b" roughness={0.62} metalness={0.34} />
+            </mesh>
+            {/* parapet lip so roofs read as concrete, not cut boxes */}
+            <mesh position={[0, b.h + 0.22, 0]}>
+              <boxGeometry args={[b.d * 0.9, 0.44, b.w * 0.92]} />
+              <meshStandardMaterial color="#0d121c" roughness={0.8} />
+            </mesh>
+            {/* stair block + water tank + antenna clutter on the roof */}
+            <mesh position={[b.d * 0.18, b.h + 1.3, b.w * 0.16]}>
+              <boxGeometry args={[b.d * 0.3, 2.2, b.w * 0.26]} />
+              <meshStandardMaterial color="#121722" roughness={0.75} />
+            </mesh>
+            {b.tank && (
+              <group position={[-b.d * 0.2, b.h + 1.9, -b.w * 0.18]}>
+                <mesh>
+                  <cylinderGeometry args={[0.7, 0.7, 1.6, 12]} />
+                  <meshStandardMaterial color="#141822" roughness={0.6} />
+                </mesh>
+                {[0, 1, 2, 3].map((k) => (
+                  <mesh
+                    key={k}
+                    position={[
+                      Math.cos((k / 4) * Math.PI * 2) * 0.55,
+                      -1.3,
+                      Math.sin((k / 4) * Math.PI * 2) * 0.55,
+                    ]}
+                  >
+                    <cylinderGeometry args={[0.06, 0.06, 1.1, 6]} />
+                    <meshStandardMaterial color="#0f131c" roughness={0.8} />
+                  </mesh>
+                ))}
+              </group>
+            )}
+            {i % 5 === 0 && (
+              <mesh position={[0, b.h + 4.4, 0]}>
+                <cylinderGeometry args={[0.045, 0.045, 8, 5]} />
+                <meshStandardMaterial
+                  color="#2a1116"
+                  emissive="#ff2f3a"
+                  emissiveIntensity={0.7}
+                  roughness={0.5}
+                />
+              </mesh>
+            )}
+            {/* horizontal floor bands: the strongest real-city cue at distance */}
+            {Array.from({ length: Math.max(2, Math.floor(b.h / 9)) }).map((_, k) => (
+              <mesh
+                key={`band${k}`}
+                position={[inward * (b.d / 2 + 0.06), podium + ((k + 1) * shaft) / (Math.floor(b.h / 9) + 1), 0]}
+              >
+                <boxGeometry args={[0.12, 0.3, b.w * 0.98]} />
+                <meshStandardMaterial color="#0b0f18" roughness={0.85} />
+              </mesh>
+            ))}
+            {/* balcony slabs with railings, facing the alley */}
+            {Array.from({ length: b.balconies }).map((_, k) => (
+              <group
+                key={k}
+                position={[
+                  inward * (b.d / 2 + 0.42),
+                  4 + ((k + 1) * b.h) / (b.balconies + 1),
+                  0,
+                ]}
+              >
+                <mesh>
+                  <boxGeometry args={[0.85, 0.14, b.w * 0.72]} />
+                  <meshStandardMaterial color="#171b24" roughness={0.7} />
+                </mesh>
+                <mesh position={[inward * 0.4, 0.42, 0]}>
+                  <boxGeometry args={[0.06, 0.72, b.w * 0.72]} />
+                  <meshStandardMaterial
+                    color="#1d222d"
+                    roughness={0.55}
+                    metalness={0.5}
+                    transparent
+                    opacity={0.75}
+                  />
+                </mesh>
+              </group>
+            ))}
+            {/* a warm sodium pool of light at street level */}
+            {i % 3 === 0 && (
+              <pointLight
+                position={[inward * 2.6, 3.2, 0]}
+                color="#ff9b3d"
+                intensity={12}
+                distance={16}
+              />
+            )}
+          </group>
+        );
+      })}
+
 
       <instancedMesh
         ref={windows}

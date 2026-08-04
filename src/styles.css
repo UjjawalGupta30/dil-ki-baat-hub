@@ -61,6 +61,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-display: "Playfair Display", "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 :root {
@@ -567,5 +568,41 @@
     text-shadow:
       0 0 26px oklch(0.86 0.11 88 / 55%),
       0 0 70px oklch(0.86 0.11 88 / 30%);
+  }
+}
+
+
+/* ---------------------------------------------------------------- day gate */
+
+/* Dust motes drifting through the opening sunlight */
+@keyframes mote-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(26px, -38px, 0);
+  }
+}
+
+/* The idle breathing ring of the press-and-hold target */
+@keyframes gate-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+
+/* Slow vertical drift used by floating overlay type */
+@keyframes glyph-rise {
+  from {
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    transform: translate3d(0, -10px, 0);
   }
 }
