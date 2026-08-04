@@ -107,7 +107,7 @@ function Rule({ delay = 0 }: { delay?: number }) {
 export function StageText({ p }: { p: number }) {
   return (
     <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center px-6">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {p < 0.14 && (
           <motion.div
             key="arrival"
