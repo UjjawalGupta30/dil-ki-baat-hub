@@ -78,7 +78,7 @@ function CameraRig() {
     const fog = scene.fog as THREE.FogExp2 | null;
     if (fog) {
       fog.color.copy(NIGHT).lerp(CRIMSON, crimson);
-      fog.density = lerp(0.019, 0.011, ramp(p, 0.05, 0.4)) + crimson * 0.006;
+      fog.density = lerp(0.017, 0.0075, ramp(p, 0.05, 0.4)) + crimson * 0.006;
     }
   });
   return null;
@@ -96,7 +96,7 @@ function City() {
     const rnd = seeded(99117);
     const m = new THREE.Matrix4();
     const q = new THREE.Quaternion();
-    const s = new THREE.Vector3(0.62, 0.9, 0.62);
+    const s = new THREE.Vector3(1.05, 1.35, 1);
     const mats: THREE.Matrix4[] = [];
     const colors: THREE.Color[] = [];
     const lit: boolean[] = [];
@@ -175,7 +175,7 @@ function City() {
         <group key={i} position={[b.x, 0, b.z]}>
           <mesh position={[0, b.h / 2, 0]}>
             <boxGeometry args={[b.d, b.h, b.w]} />
-            <meshStandardMaterial color="#0d1017" roughness={0.72} metalness={0.28} />
+            <meshStandardMaterial color="#141a26" roughness={0.68} metalness={0.3} />
           </mesh>
           {/* water tank topper */}
           {b.tank && (
@@ -391,9 +391,9 @@ function ReleaseBurst() {
 export default function CityScene() {
   return (
     <>
-      <fogExp2 attach="fog" args={["#07090e", 0.019]} />
-      <ambientLight intensity={0.35} color="#4a5570" />
-      <hemisphereLight args={["#1b2436", "#05070b", 0.5]} />
+      <fogExp2 attach="fog" args={["#07090e", 0.017]} />
+      <ambientLight intensity={0.75} color="#5b6a8c" />
+      <hemisphereLight args={["#26324a", "#06080d", 0.9]} />
       <pointLight position={[0, 30, 10]} intensity={220} distance={140} color="#ffaa44" />
       <pointLight position={[0, 24, -90]} intensity={180} distance={150} color="#00e5ff" />
       <CameraRig />
