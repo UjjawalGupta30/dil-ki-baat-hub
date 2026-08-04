@@ -67,7 +67,7 @@ function Node({
       <Html
         position={[inward * 2.4, 0.6, 0]}
         center
-        distanceFactor={16}
+        distanceFactor={26}
         occlude={false}
         zIndexRange={[20, 0]}
       >
